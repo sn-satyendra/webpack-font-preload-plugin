@@ -1,7 +1,7 @@
 const RawSource = require('webpack-sources/lib/RawSource');
 const JsDom = require("jsdom");
 
-class FontPreloadPlugin {
+class WebpackFontPreloadPlugin {
 
   constructor(options) {
     const defaults = {
@@ -119,5 +119,5 @@ class FontPreloadPlugin {
 
 }
 
-module.exports = FontPreloadPlugin;
+module.exports = WebpackFontPreloadPlugin;
 
