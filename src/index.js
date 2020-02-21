@@ -26,6 +26,14 @@ class FontPreloadPlugin {
     });
   }
 
+  /**
+   * Process the generated assets to add new <link> tags in the
+   * generated html.
+   * 
+   * @param {Object} compilation Compilation object from webpack hook
+   * @param {Function} callback Callback to be invoked after processing
+   * 
+   */
   addFonts(compilation, callback) {
     try {
       const { assets, outputOptions } = compilation;
@@ -47,6 +55,14 @@ class FontPreloadPlugin {
     }
   }
 
+  /**
+   * Parse the passed html string and add <link> tags.
+   * 
+   * @param {String} html Source html string
+   * @param {String} links String representation of all links
+   * @returns {String} Modified html as string
+   *
+   */
   appendLinks(html, links) {
     const { JSDOM } = JsDom;
     const parsed = new JSDOM(html);
@@ -58,11 +74,27 @@ class FontPreloadPlugin {
     }
   }
 
+  /**
+   * Get the extension from name of the asset.
+   * 
+   * @param {String} name Name of asset
+   * @returns {String} Extension of asset
+   * 
+   */
   getExtension(name) {
     const re = /(?:\.([^.]+))?$/;
     return re.exec(name)[1];
   }
 
+  /**
+   * Get the string representation of a <link> tag for provided name
+   * and public path.
+   * 
+   * @param {String} name Name of the font asset
+   * @param {String} publicPath Public path from webpack configuration
+   * @returns {String} String representaion of link
+   * 
+   */
   getLinkTag(name, publicPath) {
     const { crossorigin, loadType } = this.options;
     return `<link
@@ -73,6 +105,12 @@ class FontPreloadPlugin {
     >`;
   }
 
+  /**
+   * Check if the specified asset is a font asset.
+   * 
+   * @param {String} name Name of the asset
+   * @returns {Boolean} Returns true if font asset
+   */
   isFontAsset(name) {
     return this.options.extensions.includes(
       this.getExtension(name)
