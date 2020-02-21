@@ -1,5 +1,16 @@
+[![npm][npm]][npm-url]
+
 # webpack-font-preload-plugin
 A webpack plugin to allow preloading or prefetching of fonts.
+
+## Introduction
+The [preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content) value of the `<link>` element's `rel` attribute lets you declare fetch requests in the HTML's `<head>`, specifying resources that your page will need very soon, which you want to start loading early in the page lifecycle, before browsers' main rendering machinery kicks in. This ensures they are available earlier and are less likely to block the page's render, improving performance.
+
+This plugin specifically targets fonts used with the application which are bundled using webpack. The plugin would add `<link>` tags in the begining of `<head>` of your html:
+```html
+<link rel="preload" href="/font1.woff" as="font" crossorigin="">
+<link rel="preload" href="/font2.woff" as="font" crossorigin="">
+```
 
 ## Getting Started
 
@@ -84,3 +95,6 @@ new FontPreloadPlugin({
 ## License
 
 [MIT](./LICENSE)
+
+[npm]: https://img.shields.io/npm/v/webpack-font-preload-plugin
+[npm-url]: https://npmjs.com/package/webpack-font-preload-plugin
