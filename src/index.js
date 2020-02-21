@@ -22,7 +22,7 @@ class WebpackFontPreloadPlugin {
 
   apply(compiler) {
     compiler.hooks.emit.tapAsync(this.constructor.name, (compilation, callback) => {
-      callback(null, this.addFonts(compilation, callback));
+      return this.addFonts(compilation, callback);
     });
   }
 
@@ -49,9 +49,10 @@ class WebpackFontPreloadPlugin {
           }
         });
         assets[this.options.indexFile] = new RawSource(this.appendLinks(indexSource, strLink));
+        return callback();
       }
     } catch (error) {
-      callback(error);
+      return callback(error);
     }
   }
 
