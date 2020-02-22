@@ -4,6 +4,7 @@
   "description": "A webpack plugin to allow preloading or prefetching of fonts.",
   "main": "src/cjs.js",
   "scripts": {
+    "lint": "eslint ./src --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -29,6 +30,9 @@
   },
   "homepage": "https://github.com/sn-satyendra/webpack-font-preload-plugin#readme",
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
     "jsdom": "^16.2.0",
     "webpack-sources": "^1.4.3"
   }

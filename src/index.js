@@ -1,8 +1,7 @@
 const RawSource = require('webpack-sources/lib/RawSource');
-const JsDom = require("jsdom");
+const JsDom = require('jsdom');
 
 class WebpackFontPreloadPlugin {
-
   constructor(options) {
     const defaults = {
       // Name of the index file which needs modification
@@ -15,24 +14,25 @@ class WebpackFontPreloadPlugin {
       crossorigin: true,
 
       // Type of load. It can be either "preload" or "prefetch"
-      loadType: 'preload'
+      loadType: 'preload',
     };
-    this.options = Object.assign({}, defaults, options);
+    this.options = { ...defaults, ...options };
   }
 
   apply(compiler) {
-    compiler.hooks.emit.tapAsync(this.constructor.name, (compilation, callback) => {
-      return this.addFonts(compilation, callback);
-    });
+    compiler.hooks.emit.tapAsync(
+      this.constructor.name,
+      (compilation, callback) => this.addFonts(compilation, callback),
+    );
   }
 
   /**
    * Process the generated assets to add new <link> tags in the
    * generated html.
-   * 
+   *
    * @param {Object} compilation Compilation object from webpack hook
    * @param {Function} callback Callback to be invoked after processing
-   * 
+   *
    */
   addFonts(compilation, callback) {
     try {
@@ -43,22 +43,22 @@ class WebpackFontPreloadPlugin {
       const publicPath = outputOptions && outputOptions.publicPath;
       if (indexSource) {
         let strLink = '';
-        assetNames.forEach(asset => {
+        assetNames.forEach((asset) => {
           if (this.isFontAsset(asset)) {
             strLink += this.getLinkTag(asset, publicPath);
           }
         });
         assets[this.options.indexFile] = new RawSource(this.appendLinks(indexSource, strLink));
-        return callback();
       }
     } catch (error) {
       return callback(error);
     }
+    return callback();
   }
 
   /**
    * Parse the passed html string and add <link> tags.
-   * 
+   *
    * @param {String} html Source html string
    * @param {String} links String representation of all links
    * @returns {String} Modified html as string
@@ -73,14 +73,15 @@ class WebpackFontPreloadPlugin {
       head.innerHTML = `${links}${head.innerHTML.trim()}`;
       return parsed.serialize();
     }
+    return html;
   }
 
   /**
    * Get the extension from name of the asset.
-   * 
+   *
    * @param {String} name Name of asset
    * @returns {String} Extension of asset
-   * 
+   *
    */
   getExtension(name) {
     const re = /(?:\.([^.]+))?$/;
@@ -90,11 +91,11 @@ class WebpackFontPreloadPlugin {
   /**
    * Get the string representation of a <link> tag for provided name
    * and public path.
-   * 
+   *
    * @param {String} name Name of the font asset
    * @param {String} publicPath Public path from webpack configuration
    * @returns {String} String representaion of link
-   * 
+   *
    */
   getLinkTag(name, publicPath) {
     const { crossorigin, loadType } = this.options;
@@ -108,17 +109,15 @@ class WebpackFontPreloadPlugin {
 
   /**
    * Check if the specified asset is a font asset.
-   * 
+   *
    * @param {String} name Name of the asset
    * @returns {Boolean} Returns true if font asset
    */
   isFontAsset(name) {
     return this.options.extensions.includes(
-      this.getExtension(name)
+      this.getExtension(name),
     );
   }
-
 }
 
 module.exports = WebpackFontPreloadPlugin;
-
