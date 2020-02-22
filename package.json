@@ -1,6 +1,6 @@
 {
   "name": "webpack-font-preload-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A webpack plugin to allow preloading or prefetching of fonts.",
   "main": "src/cjs.js",
   "scripts": {
