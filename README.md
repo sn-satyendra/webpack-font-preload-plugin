@@ -8,8 +8,8 @@ The [preload](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_conte
 
 This plugin specifically targets fonts used with the application which are bundled using webpack. The plugin would add `<link>` tags in the begining of `<head>` of your html:
 ```html
-<link rel="preload" href="/font1.woff" as="font" crossorigin="">
-<link rel="preload" href="/font2.woff" as="font" crossorigin="">
+<link rel="preload" href="/font1.woff" as="font" crossorigin>
+<link rel="preload" href="/font2.woff" as="font" crossorigin>
 ```
 
 ## Getting Started
@@ -36,7 +36,7 @@ And run `webpack` via your preferred method.
 
 ## Options
 
-### `indexFile`
+### `index`
 
 Type: `String`
 Default: `index.html`
@@ -46,7 +46,7 @@ Name of the index file which needs modification.
 ```js
 // in your webpack.config.js
 new FontPreloadPlugin({
-  indexFile: 'index.html',
+  index: 'index.html',
 });
 ```
 
@@ -89,6 +89,21 @@ Type of load. It can be either `preload` or `prefetch`.
 // in your webpack.config.js
 new FontPreloadPlugin({
   loadType: 'preload',
+});
+```
+
+### `insertAfter`
+
+Type: `String`
+Default: `head > title`
+
+The selector for node before which the preload/prefetch links should be added.
+
+```js
+// in your webpack.config.js
+new FontPreloadPlugin({
+  // Add the preload statements before any other <link> tag present in html
+  insertAfter: 'head > link:nth-child(1)',
 });
 ```
 
