@@ -16,9 +16,9 @@ class WebpackFontPreloadPlugin {
       // Type of load. It can be either "preload" or "prefetch"
       loadType: 'preload',
 
-      // String representing the selector of tag after which the <link>
+      // String representing the selector of tag before which the <link>
       // tags would be inserted.
-      insertAfter: 'head > title',
+      insertBefore: 'head > title',
     };
     this.options = { ...defaults, ...options };
   }
@@ -73,17 +73,17 @@ class WebpackFontPreloadPlugin {
     const parsed = new JSDOM(html);
     const { document } = parsed && parsed.window;
     const head = document && document.getElementsByTagName('head')[0];
-    const insertAfterTag = document && document.querySelector(this.options.insertAfter);
+    const insertBeforeTag = document && document.querySelector(this.options.insertBefore);
     if (head) {
-      if (!insertAfterTag) {
-        // The `insertAfterTag` is not present. Prepend to head itself.
+      if (!insertBeforeTag) {
+        // The `insertBeforeTag` is not present. Prepend to head itself.
         head.innerHTML = `${links}${head.innerHTML.trim()}`;
       } else {
-        const parent = insertAfterTag.parentNode;
+        const parent = insertBeforeTag.parentNode;
         const newNodes = this.createNodeFromHtml(document, links);
         if (newNodes && newNodes.length > 0) {
-          newNodes.forEach(n => {
-            parent.insertBefore(n, insertAfterTag);
+          newNodes.forEach((n) => {
+            parent.insertBefore(n, insertBeforeTag);
           });
         }
       }

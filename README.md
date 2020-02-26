@@ -92,7 +92,7 @@ new FontPreloadPlugin({
 });
 ```
 
-### `insertAfter`
+### `insertBefore`
 
 Type: `String`
 Default: `head > title`
@@ -103,7 +103,7 @@ The selector for node before which the preload/prefetch links should be added.
 // in your webpack.config.js
 new FontPreloadPlugin({
   // Add the preload statements before any other <link> tag present in html
-  insertAfter: 'head > link:nth-child(1)',
+  insertBefore: 'head > link:nth-child(1)',
 });
 ```
 
