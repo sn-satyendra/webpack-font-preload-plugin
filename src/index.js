@@ -5,7 +5,7 @@ class WebpackFontPreloadPlugin {
   constructor(options) {
     const defaults = {
       // Name of the index file which needs modification
-      indexFile: 'index.html',
+      index: 'index.html',
 
       // Default font extensions which should be used
       extensions: ['woff', 'ttf', 'eot'],
@@ -15,6 +15,10 @@ class WebpackFontPreloadPlugin {
 
       // Type of load. It can be either "preload" or "prefetch"
       loadType: 'preload',
+
+      // String representing the selector of tag before which the <link>
+      // tags would be inserted.
+      insertBefore: 'head > title',
     };
     this.options = { ...defaults, ...options };
   }
@@ -38,7 +42,7 @@ class WebpackFontPreloadPlugin {
     try {
       const { assets, outputOptions } = compilation;
       const assetNames = assets && (Object.keys(assets) || []);
-      const index = assets[this.options.indexFile];
+      const index = assets[this.options.index];
       const indexSource = index && index.source();
       const publicPath = outputOptions && outputOptions.publicPath;
       if (indexSource) {
@@ -48,7 +52,7 @@ class WebpackFontPreloadPlugin {
             strLink += this.getLinkTag(asset, publicPath);
           }
         });
-        assets[this.options.indexFile] = new RawSource(this.appendLinks(indexSource, strLink));
+        assets[this.options.index] = new RawSource(this.appendLinks(indexSource, strLink));
       }
     } catch (error) {
       return callback(error);
@@ -69,8 +73,20 @@ class WebpackFontPreloadPlugin {
     const parsed = new JSDOM(html);
     const { document } = parsed && parsed.window;
     const head = document && document.getElementsByTagName('head')[0];
+    const insertBeforeTag = document && document.querySelector(this.options.insertBefore);
     if (head) {
-      head.innerHTML = `${links}${head.innerHTML.trim()}`;
+      if (!insertBeforeTag) {
+        // The `insertBeforeTag` is not present. Prepend to head itself.
+        head.innerHTML = `${links}${head.innerHTML.trim()}`;
+      } else {
+        const parent = insertBeforeTag.parentNode;
+        const newNodes = this.createNodeFromHtml(document, links);
+        if (newNodes && newNodes.length > 0) {
+          newNodes.forEach((n) => {
+            parent.insertBefore(n, insertBeforeTag);
+          });
+        }
+      }
       return parsed.serialize();
     }
     return html;
@@ -117,6 +133,18 @@ class WebpackFontPreloadPlugin {
     return this.options.extensions.includes(
       this.getExtension(name),
     );
+  }
+
+  /**
+   * Generate nodes/element from the Html string
+   * @param {Object} document Document object from jsdom
+   * @param {String} strHtml String representing the html
+   * @returns {Array} Array of html nodes
+   */
+  createNodeFromHtml(document, strHtml) {
+    const container = document.createElement('div');
+    container.innerHTML = strHtml.trim();
+    return container.childNodes;
   }
 }
 
