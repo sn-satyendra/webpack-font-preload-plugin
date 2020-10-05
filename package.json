@@ -5,7 +5,7 @@
   "main": "src/cjs.js",
   "scripts": {
     "lint": "eslint ./src --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "engines": {
     "node": ">= 10.17.0"
@@ -33,7 +33,9 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
+    "jest": "^25.1.0",
     "jsdom": "^16.2.0",
+    "webpack": "^4.41.6",
     "webpack-sources": "^1.4.3"
   }
 }
