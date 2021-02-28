@@ -1,24 +1,24 @@
-const RawSource = require('webpack-sources/lib/RawSource');
-const JsDom = require('jsdom');
+const RawSource = require("webpack-sources/lib/RawSource");
+const JsDom = require("jsdom");
 
 class WebpackFontPreloadPlugin {
   constructor(options) {
     const defaults = {
       // Name of the index file which needs modification
-      index: 'index.html',
+      index: "index.html",
 
       // Default font extensions which should be used
-      extensions: ['woff', 'ttf', 'eot'],
+      extensions: ["woff", "ttf", "eot"],
 
       // Is the font request crossorigin
       crossorigin: true,
 
       // Type of load. It can be either "preload" or "prefetch"
-      loadType: 'preload',
+      loadType: "preload",
 
       // String representing the selector of tag before which the <link>
       // tags would be inserted.
-      insertBefore: 'head > title',
+      insertBefore: "head > title",
 
       // Callback for doing custom manipulations to index.html for special use cases
       // like templating or server side rendering.
@@ -36,7 +36,7 @@ class WebpackFontPreloadPlugin {
   apply(compiler) {
     compiler.hooks.emit.tapAsync(
       this.constructor.name,
-      (compilation, callback) => this.addFonts(compilation, callback),
+      (compilation, callback) => this.addFonts(compilation, callback)
     );
   }
 
@@ -56,7 +56,7 @@ class WebpackFontPreloadPlugin {
       const indexSource = index && index.source();
       const publicPath = outputOptions && outputOptions.publicPath;
       if (indexSource) {
-        let strLink = '';
+        let strLink = "";
         assetNames.forEach((asset) => {
           if (this.isFontAsset(asset)) {
             strLink += this.getLinkTag(asset, publicPath);
@@ -66,11 +66,14 @@ class WebpackFontPreloadPlugin {
         // index.html by using the generated link string.
         if (this.options.replaceCallback) {
           assets[this.options.index] = new RawSource(
-            this.options.replaceCallback({ indexSource, linksAsString: strLink }),
+            this.options.replaceCallback({
+              indexSource,
+              linksAsString: strLink,
+            })
           );
         } else {
           assets[this.options.index] = new RawSource(
-            this.appendLinks(indexSource, strLink),
+            this.appendLinks(indexSource, strLink)
           );
         }
       }
@@ -92,8 +95,9 @@ class WebpackFontPreloadPlugin {
     const { JSDOM } = JsDom;
     const parsed = new JSDOM(html);
     const { document } = parsed && parsed.window;
-    const head = document && document.getElementsByTagName('head')[0];
-    const insertBeforeTag = document && document.querySelector(this.options.insertBefore);
+    const head = document && document.getElementsByTagName("head")[0];
+    const insertBeforeTag =
+      document && document.querySelector(this.options.insertBefore);
     if (head) {
       if (!insertBeforeTag) {
         // The `insertBeforeTag` is not present. Prepend to head itself.
@@ -139,7 +143,7 @@ class WebpackFontPreloadPlugin {
       rel="${loadType}"
       href="${publicPath}${name}"
       as="font"
-      ${crossorigin ? 'crossorigin' : ''}
+      ${crossorigin ? "crossorigin" : ""}
     >`;
   }
 
@@ -150,9 +154,7 @@ class WebpackFontPreloadPlugin {
    * @returns {Boolean} Returns true if font asset
    */
   isFontAsset(name) {
-    return this.options.extensions.includes(
-      this.getExtension(name),
-    );
+    return this.options.extensions.includes(this.getExtension(name));
   }
 
   /**
@@ -162,7 +164,7 @@ class WebpackFontPreloadPlugin {
    * @returns {Array} Array of html nodes
    */
   createNodeFromHtml(document, strHtml) {
-    const container = document.createElement('div');
+    const container = document.createElement("div");
     container.innerHTML = strHtml.trim();
     return container.childNodes;
   }
