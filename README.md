@@ -107,6 +107,28 @@ new FontPreloadPlugin({
 });
 ```
 
+### `replaceCallback`
+
+Type: `Function`
+Default: `undefined`
+
+Callback for doing custom manipulations to index.html for special use cases like templating or server side rendering. This callback would be passed an `object` as parameter with 2 keys:
+  - `indexSource`: Full source string of the index.html.
+  - `linksAsString`: `<link>` tags for preloading fonts as a string.
+
+The consuming app can use this information to generate the final index.html
+and must return an updated string which would be used as index.html after
+webpack build.
+
+```js
+// in your webpack.config.js
+new FontPreloadPlugin({
+  replaceCallback: ({indexSource, linksAsString}) => {
+    return indexSource.replace("{{{links}}}", linksAsString);
+  },
+});
+```
+
 ## License
 
 [MIT](./LICENSE)

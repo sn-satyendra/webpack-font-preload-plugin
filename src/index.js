@@ -19,6 +19,16 @@ class WebpackFontPreloadPlugin {
       // String representing the selector of tag before which the <link>
       // tags would be inserted.
       insertBefore: 'head > title',
+
+      // Callback for doing custom manipulations to index.html for special use cases
+      // like templating or server side rendering.
+      // This callback would be passed an `object` as parameter with 2 keys:
+      //  - `indexSource`: Full source string of the index.html.
+      //  - `linksAsString`: `<link>` tags for preloading fonts as a string.
+      // The consuming app can use this information to generate the final index.html
+      // and must return an updated string which would be used as index.html after
+      // webpack build.
+      replaceCallback: undefined,
     };
     this.options = { ...defaults, ...options };
   }
@@ -52,7 +62,17 @@ class WebpackFontPreloadPlugin {
             strLink += this.getLinkTag(asset, publicPath);
           }
         });
-        assets[this.options.index] = new RawSource(this.appendLinks(indexSource, strLink));
+        // If `replaceCallback` is specified then app is responsible to forming the updated
+        // index.html by using the generated link string.
+        if (this.options.replaceCallback) {
+          assets[this.options.index] = new RawSource(
+            this.options.replaceCallback({ indexSource, linksAsString: strLink }),
+          );
+        } else {
+          assets[this.options.index] = new RawSource(
+            this.appendLinks(indexSource, strLink),
+          );
+        }
       }
     } catch (error) {
       return callback(error);
