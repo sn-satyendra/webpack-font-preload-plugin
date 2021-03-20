@@ -1,6 +1,6 @@
 {
   "name": "webpack-font-preload-plugin",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A webpack plugin to allow preloading or prefetching of fonts.",
   "main": "src/cjs.js",
   "scripts": {
@@ -23,7 +23,8 @@
     "prefetch"
   ],
   "peerDependencies": {
-    "webpack": "^4.0.0 || ^5.0.0"
+    "webpack": "^4.0.0 || ^5.0.0",
+    "jsdom": "^16.0.0"
   },
   "author": "Satyendra Singh Naruka",
   "license": "MIT",

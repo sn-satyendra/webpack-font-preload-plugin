@@ -104,9 +104,9 @@ class WebpackFontPreloadPlugin {
         head.innerHTML = `${links}${head.innerHTML.trim()}`;
       } else {
         const parent = insertBeforeTag.parentNode;
-        const newNodes = this.createNodeFromHtml(document, links);
+        const newNodes = Array.from(this.createNodeFromHtml(document, links));
         if (newNodes && newNodes.length > 0) {
-          Array.from(newNodes).forEach((n) => {
+          newNodes.forEach((n) => {
             parent.insertBefore(n, insertBeforeTag);
           });
         }
