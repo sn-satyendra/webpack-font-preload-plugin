@@ -14,30 +14,12 @@ class WebpackFontPreloadPlugin {
    */
   constructor(options) {
     const defaults = {
-      // Name of the index file which needs modification
       index: "index.html",
-
-      // Default font extensions which should be used
       extensions: ["woff", "ttf", "eot"],
-
-      // Is the font request crossorigin
       crossorigin: true,
-
-      // Type of load. It can be either "preload" or "prefetch"
+      /** @type {WebpackFontPreloadPluginOptions["loadType"]} */
       loadType: "preload",
-
-      // String representing the selector of tag before which the <link>
-      // tags would be inserted.
       insertBefore: "head > title",
-
-      // Callback for doing custom manipulations to index.html for special use cases
-      // like templating or server side rendering.
-      // This callback would be passed an `object` as parameter with 2 keys:
-      //  - `indexSource`: Full source string of the index.html.
-      //  - `linksAsString`: `<link>` tags for preloading fonts as a string.
-      // The consuming app can use this information to generate the final index.html
-      // and must return an updated string which would be used as index.html after
-      // webpack build.
       replaceCallback: undefined,
     };
     /** @type {WebpackFontPreloadPluginOptions} */
@@ -170,7 +152,7 @@ class WebpackFontPreloadPlugin {
    * Check if the specified asset is a font asset.
    *
    * @param {string} name Name of the asset
-   * @returns {Boolean} Returns true if font asset
+   * @returns {boolean} Returns true if font asset
    */
   isFontAsset(name) {
     const { extensions } = this.options;
