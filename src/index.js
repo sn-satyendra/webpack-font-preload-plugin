@@ -1,7 +1,16 @@
+// @ts-check
+// Import types
+/** @typedef {import("./index.d").Options} WebpackFontPreloadPluginOptions */
+/** @typedef {import('webpack').Compiler} WebpackCompiler */
+/** @typedef {import('webpack').Compilation} WebpackCompilation */
+
 const RawSource = require("webpack-sources/lib/RawSource");
 const JsDom = require("jsdom");
 
 class WebpackFontPreloadPlugin {
+  /**
+   * @param {WebpackFontPreloadPluginOptions} options
+   */
   constructor(options) {
     const defaults = {
       // Name of the index file which needs modification
@@ -30,9 +39,14 @@ class WebpackFontPreloadPlugin {
       // webpack build.
       replaceCallback: undefined,
     };
+    /** @type {WebpackFontPreloadPluginOptions} */
     this.options = { ...defaults, ...options };
   }
 
+  /**
+   * This method is called once by the webpack compiler while installing the plugin.
+   * @param {WebpackCompiler} compiler
+   */
   apply(compiler) {
     compiler.hooks.emit.tapAsync(
       this.constructor.name,
@@ -44,8 +58,8 @@ class WebpackFontPreloadPlugin {
    * Process the generated assets to add new <link> tags in the
    * generated html.
    *
-   * @param {Object} compilation Compilation object from webpack hook
-   * @param {Function} callback Callback to be invoked after processing
+   * @param {WebpackCompilation} compilation Compilation object from webpack hook
+   * @param {(err?: Error) => void} callback Callback to be invoked after processing
    *
    */
   addFonts(compilation, callback) {
@@ -86,9 +100,9 @@ class WebpackFontPreloadPlugin {
   /**
    * Parse the passed html string and add <link> tags.
    *
-   * @param {String} html Source html string
-   * @param {String} links String representation of all links
-   * @returns {String} Modified html as string
+   * @param {string} html Source html string
+   * @param {string} links String representation of all links
+   * @returns {string} Modified html as string
    *
    */
   appendLinks(html, links) {
@@ -119,8 +133,8 @@ class WebpackFontPreloadPlugin {
   /**
    * Get the extension from name of the asset.
    *
-   * @param {String} name Name of asset
-   * @returns {String} Extension of asset
+   * @param {string} name Name of asset
+   * @returns {string} Extension of asset
    *
    */
   getExtension(name) {
@@ -132,9 +146,9 @@ class WebpackFontPreloadPlugin {
    * Get the string representation of a <link> tag for provided name
    * and public path.
    *
-   * @param {String} name Name of the font asset
-   * @param {String} publicPath Public path from webpack configuration
-   * @returns {String} String representaion of link
+   * @param {string} name Name of the font asset
+   * @param {string} publicPath Public path from webpack configuration
+   * @returns {string} String representaion of link
    *
    */
   getLinkTag(name, publicPath) {
@@ -150,7 +164,7 @@ class WebpackFontPreloadPlugin {
   /**
    * Check if the specified asset is a font asset.
    *
-   * @param {String} name Name of the asset
+   * @param {string} name Name of the asset
    * @returns {Boolean} Returns true if font asset
    */
   isFontAsset(name) {
@@ -160,7 +174,7 @@ class WebpackFontPreloadPlugin {
   /**
    * Generate nodes/element from the Html string
    * @param {Object} document Document object from jsdom
-   * @param {String} strHtml String representing the html
+   * @param {string} strHtml String representing the html
    * @returns {Array} Array of html nodes
    */
   createNodeFromHtml(document, strHtml) {
