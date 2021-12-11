@@ -3,6 +3,7 @@
 /** @typedef {import("./index.d").Options} WebpackFontPreloadPluginOptions */
 /** @typedef {import('webpack').Compiler} WebpackCompiler */
 /** @typedef {import('webpack').Compilation} WebpackCompilation */
+/** @typedef {import('jsdom').DOMWindow} Document */
 
 const RawSource = require("webpack-sources/lib/RawSource");
 const JsDom = require("jsdom");
@@ -67,8 +68,8 @@ class WebpackFontPreloadPlugin {
       const { assets, outputOptions } = compilation;
       const assetNames = assets && (Object.keys(assets) || []);
       const index = assets[this.options.index];
-      const indexSource = index && index.source();
-      const publicPath = outputOptions && outputOptions.publicPath;
+      const indexSource = (index && index.source()).toString();
+      const publicPath = (outputOptions && outputOptions.publicPath).toString();
       if (indexSource) {
         let strLink = "";
         assetNames.forEach((asset) => {
@@ -173,7 +174,7 @@ class WebpackFontPreloadPlugin {
 
   /**
    * Generate nodes/element from the Html string
-   * @param {Object} document Document object from jsdom
+   * @param {Document} document Document object from jsdom
    * @param {string} strHtml String representing the html
    * @returns {Array} Array of html nodes
    */
