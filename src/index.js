@@ -95,6 +95,7 @@ class WebpackFontPreloadPlugin {
         }
       }
     } catch (error) {
+      // @ts-ignore
       return callback(error);
     }
     return callback();
