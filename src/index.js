@@ -65,31 +65,33 @@ class WebpackFontPreloadPlugin {
    */
   addFonts(compilation, callback) {
     try {
-      const { assets, outputOptions } = compilation;
-      const assetNames = assets && (Object.keys(assets) || []);
-      const index = assets[this.options.index];
-      const indexSource = (index && index.source()).toString();
-      const publicPath = (outputOptions && outputOptions.publicPath).toString();
-      if (indexSource) {
-        let strLink = "";
-        assetNames.forEach((asset) => {
-          if (this.isFontAsset(asset)) {
-            strLink += this.getLinkTag(asset, publicPath);
+      if (this.options.index) {
+        const { assets, outputOptions } = compilation;
+        const assetNames = assets && (Object.keys(assets) || []);
+        const index = assets[this.options.index];
+        const indexSource = index && index.source();
+        const publicPath = outputOptions && outputOptions.publicPath;
+        if (indexSource && publicPath) {
+          let strLink = "";
+          assetNames.forEach((asset) => {
+            if (this.isFontAsset(asset)) {
+              strLink += this.getLinkTag(asset, publicPath.toString());
+            }
+          });
+          // If `replaceCallback` is specified then app is responsible to forming the updated
+          // index.html by using the generated link string.
+          if (this.options.replaceCallback) {
+            assets[this.options.index] = new RawSource(
+              this.options.replaceCallback({
+                indexSource: indexSource.toString(),
+                linksAsString: strLink,
+              })
+            );
+          } else {
+            assets[this.options.index] = new RawSource(
+              this.appendLinks(indexSource.toString(), strLink)
+            );
           }
-        });
-        // If `replaceCallback` is specified then app is responsible to forming the updated
-        // index.html by using the generated link string.
-        if (this.options.replaceCallback) {
-          assets[this.options.index] = new RawSource(
-            this.options.replaceCallback({
-              indexSource,
-              linksAsString: strLink,
-            })
-          );
-        } else {
-          assets[this.options.index] = new RawSource(
-            this.appendLinks(indexSource, strLink)
-          );
         }
       }
     } catch (error) {
@@ -135,12 +137,13 @@ class WebpackFontPreloadPlugin {
    * Get the extension from name of the asset.
    *
    * @param {string} name Name of asset
-   * @returns {string} Extension of asset
+   * @returns {string|null} Extension of asset
    *
    */
   getExtension(name) {
     const re = /(?:\.([^.]+))?$/;
-    return re.exec(name)[1];
+    const results = re.exec(name);
+    return results && results[1];
   }
 
   /**
@@ -169,7 +172,12 @@ class WebpackFontPreloadPlugin {
    * @returns {Boolean} Returns true if font asset
    */
   isFontAsset(name) {
-    return this.options.extensions.includes(this.getExtension(name));
+    const { extensions } = this.options;
+    const extension = this.getExtension(name);
+    if (extension && extensions) {
+      return extensions.includes(extension);
+    }
+    return false;
   }
 
   /**
