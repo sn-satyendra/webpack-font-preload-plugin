@@ -19,5 +19,7 @@ module.exports = {
   rules: {
     "class-methods-use-this": OFF,
     "import/no-extraneous-dependencies": [ERROR, { devDependencies: true }],
+    "import/no-relative-packages": OFF,
+    "import/no-import-module-exports": OFF,
   },
 };
