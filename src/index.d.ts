@@ -1,3 +1,5 @@
+import { Compiler } from "webpack";
+
 declare class WebpackFontPreloadPlugin {
   constructor(options?: WebpackFontPreloadPlugin.Options);
 
@@ -5,11 +7,23 @@ declare class WebpackFontPreloadPlugin {
    * Webpack font preload plugin options to modify the default configuration.
    */
   options?: WebpackFontPreloadPlugin.Options;
+
+  /**
+   * This method is called once by the webpack compiler while installing the plugin.
+   */
+  apply(compiler: Compiler): void;
 }
 
 declare namespace WebpackFontPreloadPlugin {
   interface replaceCallbackOptions {
+    /**
+     * Full source string of the index.html
+     */
     indexSource: string;
+
+    /**
+     * `<link>` tags for preloading fonts as a string
+     */
     linksAsString: string;
   }
   interface Options {
@@ -50,14 +64,7 @@ declare namespace WebpackFontPreloadPlugin {
      * webpack build.
      */
     replaceCallback?: ({
-      /**
-       * Full source string of the index.html
-       */
       indexSource,
-
-      /**
-       * `<link>` tags for preloading fonts as a string
-       */
       linksAsString,
     }: replaceCallbackOptions) => string;
 
