@@ -53,8 +53,8 @@ class WebpackFontPreloadPlugin {
         const assetNames = assets && (Object.keys(assets) || []);
         const index = assets[this.options.index];
         const indexSource = index && index.source();
-        const publicPath = outputOptions && outputOptions.publicPath;
-        if (indexSource && publicPath) {
+        const publicPath = (outputOptions && outputOptions.publicPath) || "";
+        if (indexSource) {
           let strLink = "";
           assetNames.forEach((asset) => {
             if (this.isFontAsset(asset) && this.isFiltered(asset)) {
