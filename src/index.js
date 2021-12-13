@@ -64,6 +64,7 @@ class WebpackFontPreloadPlugin {
           // If `replaceCallback` is specified then app is responsible to forming the updated
           // index.html by using the generated link string.
           if (this.options.replaceCallback) {
+            // @ts-ignore
             assets[this.options.index] = new RawSource(
               this.options.replaceCallback({
                 indexSource: indexSource.toString(),
@@ -71,6 +72,7 @@ class WebpackFontPreloadPlugin {
               })
             );
           } else {
+            // @ts-ignore
             assets[this.options.index] = new RawSource(
               this.appendLinks(indexSource.toString(), strLink)
             );

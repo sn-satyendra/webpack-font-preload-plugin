@@ -59,7 +59,7 @@ declare namespace WebpackFontPreloadPlugin {
        * `<link>` tags for preloading fonts as a string
        */
       linksAsString,
-    }: replaceCallbackOptions) => void;
+    }: replaceCallbackOptions) => string;
 
     /**
      * Expression for allowing more granular filtering of the font assets for doing
