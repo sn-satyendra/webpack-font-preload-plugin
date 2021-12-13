@@ -60,6 +60,17 @@ declare namespace WebpackFontPreloadPlugin {
        */
       linksAsString,
     }: replaceCallbackOptions) => void;
+
+    /**
+     * Expression for allowing more granular filtering of the font assets for doing
+     * a preload/prefetch. The filter is applied on the font assets selected by the
+     * `extensions` option. If the filter is a string, all the font assets which contain
+     * the string as part of the name are included in the preload and rest are ignored.
+     * In case filter is regex, the font asset's name is tested to match the regex for
+     * allowing preload.
+     * If you don't pass this option, all the font assets will be preloaded.
+     */
+    filter?: string | RegExp;
   }
 }
 

@@ -41,8 +41,9 @@ And run `webpack` via your preferred method.
 
 ### `index`
 
-Type: `String`
+Type: `string`
 Default: `index.html`
+Optional: `true`
 
 Name of the index file which needs modification.
 
@@ -55,8 +56,9 @@ new FontPreloadPlugin({
 
 ### `extensions`
 
-Type: `Array`
+Type: `string[]`
 Default: `['woff', 'ttf', 'eot']`
+Optional: `true`
 
 Default font extensions which should be used.
 
@@ -69,8 +71,9 @@ new FontPreloadPlugin({
 
 ### `crossorigin`
 
-Type: `Boolean`
+Type: `boolean`
 Default: `true`
+Optional: `true`
 
 Is the font request crossorigin or not.
 
@@ -83,8 +86,9 @@ new FontPreloadPlugin({
 
 ### `loadType`
 
-Type: `String`
+Type: `string`
 Default: `preload`
+Optional: `true`
 
 Type of load. It can be either `preload` or `prefetch`.
 
@@ -97,8 +101,9 @@ new FontPreloadPlugin({
 
 ### `insertBefore`
 
-Type: `String`
+Type: `string`
 Default: `head > title`
+Optional: `true`
 
 The selector for node before which the preload/prefetch links should be added.
 
@@ -114,6 +119,7 @@ new FontPreloadPlugin({
 
 Type: `Function`
 Default: `undefined`
+Optional: `true`
 
 Callback for doing custom manipulations to index.html for special use cases like templating or server side rendering. This callback would be passed an `object` as parameter with 2 keys:
 
@@ -133,6 +139,25 @@ new FontPreloadPlugin({
 });
 ```
 
+### `filter`
+
+Type: `string`
+Default: `undefined`
+Optional: `true`
+
+Expression for allowing more granular filtering of the font assets for doing a preload/prefetch. The filter is applied on the font assets selected by the `extensions` option. If the filter is a string, all the font assets which contain the string as part of the name are included in the preload and rest are ignored. In case filter is regex, the font asset's name is tested to match the regex for allowing preload. If you don't pass this option, all the font assets will be preloaded.
+
+```js
+// To only preload font's which have string `app-font` as part of there name.
+new FontPreloadPlugin({
+  filter: "app-font"
+});
+
+// To preload fonts which start with `mui` or `app` in there name.
+new FontPreloadPlugin({
+  filter: /^mui|^app/i
+});
+```
 ## License
 
 [MIT](./LICENSE)

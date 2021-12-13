@@ -21,6 +21,7 @@ class WebpackFontPreloadPlugin {
       loadType: "preload",
       insertBefore: "head > title",
       replaceCallback: undefined,
+      filter: undefined,
     };
     /** @type {WebpackFontPreloadPluginOptions} */
     this.options = { ...defaults, ...options };
@@ -56,7 +57,7 @@ class WebpackFontPreloadPlugin {
         if (indexSource && publicPath) {
           let strLink = "";
           assetNames.forEach((asset) => {
-            if (this.isFontAsset(asset)) {
+            if (this.isFontAsset(asset) && this.isFiltered(asset)) {
               strLink += this.getLinkTag(asset, publicPath.toString());
             }
           });
@@ -161,6 +162,25 @@ class WebpackFontPreloadPlugin {
       return extensions.includes(extension);
     }
     return false;
+  }
+
+  /**
+   * Check if the asset should be preloaded based on the `filter` option.
+   * @param {string} name Name of the asset
+   * @returns {boolean} true if the asset is allowed to be preloaded
+   */
+  isFiltered(name) {
+    const { filter } = this.options;
+    if (filter) {
+      if (filter instanceof RegExp) {
+        // Check that the asset name matches the filter regex.
+        return filter.test(name);
+      }
+      // Check if the asset name contains the specified filter string.
+      return name.includes(filter);
+    }
+    // If the filter is not defined, allow all the assets to preload.
+    return true;
   }
 
   /**
