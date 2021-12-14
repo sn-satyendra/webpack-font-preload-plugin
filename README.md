@@ -57,7 +57,7 @@ new FontPreloadPlugin({
 ### `extensions`
 
 Type: `string[]`
-Default: `['woff', 'ttf', 'eot']`
+Default: `['woff', 'woff2', 'ttf', 'eot']`
 Optional: `true`
 
 Default font extensions which should be used.

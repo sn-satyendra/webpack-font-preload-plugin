@@ -15,7 +15,7 @@ class WebpackFontPreloadPlugin {
   constructor(options) {
     const defaults = {
       index: "index.html",
-      extensions: ["woff", "ttf", "eot"],
+      extensions: ["woff", "woff2", "ttf", "eot"],
       crossorigin: true,
       /** @type {WebpackFontPreloadPluginOptions["loadType"]} */
       loadType: "preload",

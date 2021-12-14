@@ -29,27 +29,37 @@ declare namespace WebpackFontPreloadPlugin {
   interface Options {
     /**
      * Name of the index file which needs modification.
+     *
+     * Defaults to "index.html".
      */
     index?: string;
 
     /**
      * Default font extensions which should be used.
+     *
+     * Defaults to ["woff", "woff2", "ttf", "eot"].
      */
     extensions?: string[];
 
     /**
      * Is the font request crossorigin or not.
+     *
+     * Defaults to true.
      */
     crossorigin?: boolean;
 
     /**
      * Type of load. It can be either "preload" or "prefetch".
+     *
+     * Defaults to "preload".
      */
     loadType?: "preload" | "prefetch";
 
     /**
      * String representing the selector of tag before which the <link>
      * tags would be inserted.
+     *
+     * Defaults to "head > title".
      */
     insertBefore?: string;
 
@@ -62,6 +72,8 @@ declare namespace WebpackFontPreloadPlugin {
      * The consuming app can use this information to generate the final index.html
      * and must return an updated string which would be used as index.html after
      * webpack build.
+     *
+     * Defaults to undefined.
      */
     replaceCallback?: ({
       indexSource,
@@ -76,6 +88,8 @@ declare namespace WebpackFontPreloadPlugin {
      * In case filter is regex, the font asset's name is tested to match the regex for
      * allowing preload.
      * If you don't pass this option, all the font assets will be preloaded.
+     *
+     * Defaults to undefined.
      */
     filter?: string | RegExp;
   }

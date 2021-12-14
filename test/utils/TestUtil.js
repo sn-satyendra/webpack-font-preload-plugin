@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import webpack from "webpack";
 import { JSDOM } from "jsdom";
-import WebpackFontPreloadPlugin from "../../src/cjs";
+import WebpackFontPreloadPlugin from "../../src/index";
 import { DEFAULT_WEBPACK_CONFIG, WP_OUTPUT_DIR } from "../constants/Constants";
 
 /**
@@ -17,7 +17,7 @@ import { DEFAULT_WEBPACK_CONFIG, WP_OUTPUT_DIR } from "../constants/Constants";
  */
 export function run(
   webpackConfigurationOverrides,
-  pluginOptions = {},
+  pluginOptions,
   indexFileName = "index.html"
 ) {
   const finalWpConfig = {
