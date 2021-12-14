@@ -8,10 +8,19 @@
   src: url(./app-font-2.woff2);
 }
 
+@font-face {
+  font-family: app-font-3;
+  src: url(./app-font-3.ttf);
+}
+
 div {
   font-family: app-font-1;
 }
 
 p {
   font-family: app-font-2;
+}
+
+span {
+  font-family: app-font-3;
 }
