@@ -11,8 +11,9 @@
     "lint": "eslint ./src --fix",
     "test": "jest",
     "pretty-src": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "pretty-test": "prettier --write \"test/**/*.{js,ts,json,md}\"",
     "pretty-configs": "prettier --write \"*.{js,json,md}\"",
-    "pretty": "npm run pretty-src && npm run pretty-configs"
+    "pretty": "npm run pretty-src && npm run pretty-test && npm run pretty-configs"
   },
   "engines": {
     "node": ">= 10.17.0"
@@ -47,6 +48,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "husky": "^6.0.0",
     "jest": "^27.4.5",
@@ -62,6 +64,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,ts,json,md}": "npm run pretty-src",
+    "test/**/*.{js,ts,json,md}": "npm run pretty-test",
     "*.{js,json,md}": "npm run pretty-configs"
   }
 }

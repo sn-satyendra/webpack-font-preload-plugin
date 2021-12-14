@@ -7,11 +7,13 @@ module.exports = {
     commonjs: true,
     es6: true,
     node: true,
+    jest: true,
   },
   extends: ["airbnb-base", "plugin:prettier/recommended"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
+    expect: true,
   },
   parserOptions: {
     ecmaVersion: 2018,
@@ -22,4 +24,12 @@ module.exports = {
     "import/no-relative-packages": OFF,
     "import/no-import-module-exports": OFF,
   },
+  overrides: [
+    {
+      files: ["test/**/*"],
+      rules: {
+        "no-console": OFF,
+      },
+    },
+  ],
 };

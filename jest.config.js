@@ -14,4 +14,5 @@ module.exports = {
   },
   coverageReporters: ["cobertura", "html", "lcov"],
   moduleFileExtensions: ["js"],
+  bail: true,
 };
