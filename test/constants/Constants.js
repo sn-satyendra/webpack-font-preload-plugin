@@ -20,9 +20,6 @@ export const DEFAULT_WEBPACK_CONFIG = {
     assetModuleFilename: "[name].[hash][ext]",
     publicPath: "/",
   },
-  stats: {
-    source: true,
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../fixtures/index.html"),
