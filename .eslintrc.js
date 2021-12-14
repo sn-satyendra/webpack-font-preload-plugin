@@ -31,6 +31,7 @@ module.exports = {
       rules: {
         "no-console": OFF,
         "global-require": OFF,
+        "import/prefer-default-export": OFF,
       },
     },
   ],
