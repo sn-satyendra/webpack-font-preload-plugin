@@ -1,39 +1,66 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+import path from "path";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import webpack from "webpack";
+import WebpackFontPreloadPlugin from "../../src/cjs";
 
 /**
- * Get the webpack configuration for test.
- * @param {object} overrides Webpack configuration overrides.
- * @returns {object} Final configuration.
+ * Default webpack configuration.
  */
-export default function getConfig(overrides) {
-  const config = {
-    mode: "production",
-    entry: [path.resolve(__dirname, "../fixtures/index.js")],
-    output: {
-      filename: "[name].[chunkhash].bundle.js",
-      chunkFilename: "[name].[chunkhash].chunk.js",
-      assetModuleFilename: "[name].[hash][ext]",
-      publicPath: "/",
-      plugins: [
-        new HtmlWebpackPlugin({
-          template: path.resolve(__dirname, "../fixtures/index.html"),
-          minify: {
-            collapseWhitespace: true,
-            removeComments: true,
-            removeRedundantAttributes: true,
-            removeScriptTypeAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            useShortDoctype: true,
-            minifyJS: true,
-            minifyCSS: true,
-          },
-        }),
-      ],
-    },
+export const DEFAULT_WEBPACK_CONFIG = {
+  mode: "production",
+  entry: [path.resolve(__dirname, "../fixtures/index.js")],
+  output: {
+    filename: "[name].[chunkhash].bundle.js",
+    chunkFilename: "[name].[chunkhash].chunk.js",
+    assetModuleFilename: "[name].[hash][ext]",
+    publicPath: "/",
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, "../fixtures/index.html"),
+        minify: {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true,
+          minifyJS: true,
+          minifyCSS: true,
+        },
+      }),
+    ],
+  },
+};
+
+/**
+ * Provides the ability to run `webpack` function by passing the webpack configuration
+ * and the `WebpackFontPreloadPlugin` options.
+ * @param {object} webpackConfigurationOverrides Any overrides for the default webpack
+ *                                               configuration.
+ * @param {object} pluginOptions WebpackFontPreloadPlugin options.
+ * @returns {Promise} Promise which resolves if the webpack is able to do the processing
+ *                    else rejects with an error.
+ */
+export function run(webpackConfigurationOverrides, pluginOptions = {}) {
+  const finalWpConfig = {
+    ...DEFAULT_WEBPACK_CONFIG,
+    webpackConfigurationOverrides,
   };
-  return {
-    ...config,
-    ...overrides,
-  };
+  finalWpConfig.output.plugins.push(
+    new WebpackFontPreloadPlugin(pluginOptions)
+  );
+  return new Promise((resolve, reject) => {
+    webpack(finalWpConfig, (err, stats) => {
+      if (err || stats.hasErrors()) {
+        reject(err || stats);
+      }
+
+      const modulePaths = stats.compilation.modules
+        .map((i) => i.resource)
+        .filter(Boolean)
+        .map((mpath) => mpath.replace(/\\/g, "/"));
+
+      resolve(modulePaths);
+    });
+  });
 }

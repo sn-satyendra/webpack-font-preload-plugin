@@ -1,8 +1,8 @@
-// eslint-disable-next-line no-unused-vars
-const WebpackFontPreloadPlugin = require("../src/cjs");
+import { run } from "./utils/TestUtil";
 
 describe("WebpackFontPreloadPlugin tests", () => {
-  it("sample test", () => {
-    console.log("Running tests");
+  it("sample test", async () => {
+    const results = await run();
+    console.log(results);
   });
 });
