@@ -10,8 +10,9 @@
   "scripts": {
     "lint": "eslint ./src --fix",
     "test": "jest",
-    "pretty": "prettier --write \"src/**/*.{js,ts,json,md}\"",
-    "pretty-configs": "prettier --write \"*.{js,json,md}\""
+    "pretty-src": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "pretty-configs": "prettier --write \"*.{js,json,md}\"",
+    "pretty": "npm run pretty-src && npm run pretty-configs"
   },
   "engines": {
     "node": ">= 10.17.0"
@@ -60,7 +61,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,ts,json,md}": "npm run pretty",
+    "src/**/*.{js,ts,json,md}": "npm run pretty-src",
     "*.{js,json,md}": "npm run pretty-configs"
   }
 }

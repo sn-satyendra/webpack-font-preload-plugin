@@ -1,11 +1,9 @@
 module.exports = {
-  testEnvironment: 'node',
+  testEnvironment: "node",
+  testRegex: ".*.test\\.(js)$",
   collectCoverage: true,
-  collectCoverageFrom: [
-    '**/src/*.js',
-    '!**/node_modules/**',
-  ],
-  coverageDirectory: './coverage',
+  collectCoverageFrom: ["**/src/*.js", "!**/node_modules/**"],
+  coverageDirectory: "./coverage",
   coverageThreshold: {
     global: {
       branches: 80,
@@ -14,6 +12,6 @@ module.exports = {
       statements: -10,
     },
   },
-  coverageReporters: ['cobertura', 'html', 'lcov'],
-  moduleFileExtensions: ['js'],
+  coverageReporters: ["cobertura", "html", "lcov"],
+  moduleFileExtensions: ["js"],
 };
