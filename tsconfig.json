@@ -1,0 +1,16 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "strict": true, 
+    "noImplicitAny": false,
+    "allowJs": true,
+    "declaration": true,
+    "outDir": "dist",
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "lib": ["esnext"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "emitDeclarationOnly": true
+  }
+}

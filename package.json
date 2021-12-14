@@ -1,11 +1,17 @@
 {
   "name": "webpack-font-preload-plugin",
-  "version": "1.0.2",
+  "version": "1.4.1",
   "description": "A webpack plugin to allow preloading or prefetching of fonts.",
   "main": "src/cjs.js",
+  "types": "src/index.d.ts",
+  "files": [
+    "src/"
+  ],
   "scripts": {
     "lint": "eslint ./src --fix",
-    "test": "jest"
+    "test": "jest",
+    "pretty": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "pretty-configs": "prettier --write \"*.{js,json,md}\""
   },
   "engines": {
     "node": ">= 10.17.0"
@@ -29,13 +35,32 @@
     "url": "https://github.com/sn-satyendra/webpack-font-preload-plugin/issues"
   },
   "homepage": "https://github.com/sn-satyendra/webpack-font-preload-plugin#readme",
+  "dependencies": {
+    "jsdom": "^19.0.0",
+    "webpack-sources": "^3.2.2"
+  },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.1",
-    "jest": "^25.1.0",
-    "jsdom": "^16.2.0",
-    "webpack": "^4.41.6",
-    "webpack-sources": "^1.4.3"
+    "@types/jsdom": "^16.2.13",
+    "@types/webpack-sources": "^3.2.0",
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^6.0.0",
+    "jest": "^27.4.5",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.3",
+    "webpack": "^5.65.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts,json,md}": "npm run pretty",
+    "*.{js,json,md}": "npm run pretty-configs"
   }
 }
