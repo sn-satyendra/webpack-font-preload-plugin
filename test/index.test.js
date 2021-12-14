@@ -1,5 +1,5 @@
 import rimraf from "rimraf";
-import { run } from "./utils/TestUtil";
+import { run, findFontPreload } from "./utils/TestUtil";
 import { WP_OUTPUT_DIR } from "./constants/Constants";
 
 const cleanOutput = (done) => {
@@ -10,17 +10,10 @@ describe("WebpackFontPreloadPlugin tests", () => {
   beforeEach(cleanOutput);
   afterAll(cleanOutput);
 
-  it("test 1", async () => {
-    try {
-      const { index, assets } = await run();
-      console.log(index, assets);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
   it("should preload all the available fonts when no configuration is specified", async () => {
-    console.log("TODO");
+    const { indexDocument } = await run();
+    const links = findFontPreload(indexDocument);
+    expect(links.length).toBe(4);
   });
 
   it("should preload only specific fonts when `extensions` is specified", async () => {

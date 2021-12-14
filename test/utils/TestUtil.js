@@ -51,3 +51,14 @@ export function run(
     });
   });
 }
+
+/**
+ * Get all the link tags for font preloads/prefetch from the provided
+ * document.
+ * @param {object} document JSDOM document object.
+ * @returns {object[]} Array of link tags for fonts
+ */
+export function findFontPreload(document) {
+  const links = document.querySelectorAll("link[as='font']");
+  return Array.from(links);
+}
