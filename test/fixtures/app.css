@@ -13,6 +13,11 @@
   src: url(./app-font-3.ttf);
 }
 
+@font-face {
+  font-family: external-font;
+  src: url(./app-font-3.ttf);
+}
+
 div {
   font-family: app-font-1;
 }
@@ -23,4 +28,8 @@ p {
 
 span {
   font-family: app-font-3;
+}
+
+h1 {
+  font-family: external-font;
 }
