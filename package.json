@@ -42,8 +42,11 @@
     "webpack-sources": "^3.2.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
     "@types/jsdom": "^16.2.13",
     "@types/webpack-sources": "^3.2.0",
+    "babel-jest": "^27.4.5",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",

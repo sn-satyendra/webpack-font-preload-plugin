@@ -14,22 +14,22 @@ export const DEFAULT_WEBPACK_CONFIG = {
     chunkFilename: "[name].[chunkhash].chunk.js",
     assetModuleFilename: "[name].[hash][ext]",
     publicPath: "/",
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, "../fixtures/index.html"),
-        minify: {
-          collapseWhitespace: true,
-          removeComments: true,
-          removeRedundantAttributes: true,
-          removeScriptTypeAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          useShortDoctype: true,
-          minifyJS: true,
-          minifyCSS: true,
-        },
-      }),
-    ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "../fixtures/index.html"),
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
+        minifyJS: true,
+        minifyCSS: true,
+      },
+    }),
+  ],
 };
 
 /**
@@ -44,11 +44,9 @@ export const DEFAULT_WEBPACK_CONFIG = {
 export function run(webpackConfigurationOverrides, pluginOptions = {}) {
   const finalWpConfig = {
     ...DEFAULT_WEBPACK_CONFIG,
-    webpackConfigurationOverrides,
+    ...webpackConfigurationOverrides,
   };
-  finalWpConfig.output.plugins.push(
-    new WebpackFontPreloadPlugin(pluginOptions)
-  );
+  finalWpConfig.plugins.push(new WebpackFontPreloadPlugin(pluginOptions));
   return new Promise((resolve, reject) => {
     webpack(finalWpConfig, (err, stats) => {
       if (err || stats.hasErrors()) {
