@@ -1,5 +1,6 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import webpack from "webpack";
 import WebpackFontPreloadPlugin from "../../src/cjs";
 
@@ -29,7 +30,33 @@ export const DEFAULT_WEBPACK_CONFIG = {
         minifyCSS: true,
       },
     }),
+    new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].bundle.css",
+      chunkFilename: "[name].[contenthash].chunk.css",
+    }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.(js)$/,
+        exclude: /node_modules/,
+        use: ["babel-loader"],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource",
+      },
+    ],
+  },
 };
 
 /**

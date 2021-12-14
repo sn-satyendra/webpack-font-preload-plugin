@@ -1,7 +1,3 @@
-require("./common");
-
-require.ensure([], () => {
-  require("./async");
-});
+import "./app";
 
 document.body.innerHTML = `${document.body.innerHTML}<p>index.js</p>`;
