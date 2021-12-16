@@ -19,7 +19,13 @@ describe("WebpackFontPreloadPlugin tests", () => {
   });
 
   it("should preload only specific fonts when `extensions` is specified", async () => {
-    console.log("TODO");
+    const extensions = ["ttf"];
+    const { indexDocument } = await run(null, {
+      extensions,
+    });
+    const fonts = findPreloadedFonts(indexDocument);
+    expect(fonts.length).toBe(2);
+    expect(await areValidFonts(fonts, extensions)).toBe(true);
   });
 
   it("should not add `crossorigin` attribute when option is turned off", async () => {

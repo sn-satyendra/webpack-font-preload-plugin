@@ -1,9 +1,70 @@
 import fs from "fs";
 import path from "path";
 import webpack from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { JSDOM } from "jsdom";
 import WebpackFontPreloadPlugin from "../../src/index";
-import { DEFAULT_WEBPACK_CONFIG, WP_OUTPUT_DIR } from "../constants/Constants";
+import { WP_OUTPUT_DIR } from "../constants/Constants";
+
+/**
+ * Get the default webpack config.
+ * @returns {object} Config object.
+ */
+export function getDefaultWebpackConfig() {
+  return {
+    mode: "production",
+    entry: [path.resolve(__dirname, "../fixtures/index.js")],
+    output: {
+      path: WP_OUTPUT_DIR,
+      filename: "[name].[chunkhash].bundle.js",
+      chunkFilename: "[name].[chunkhash].chunk.js",
+      assetModuleFilename: "[name].[hash][ext]",
+      publicPath: "/",
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, "../fixtures/index.html"),
+        minify: {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true,
+          minifyJS: true,
+          minifyCSS: true,
+        },
+      }),
+      new MiniCssExtractPlugin({
+        filename: "[name].[contenthash].bundle.css",
+        chunkFilename: "[name].[contenthash].chunk.css",
+      }),
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.(js)$/,
+          exclude: /node_modules/,
+          use: ["babel-loader"],
+        },
+        {
+          test: /\.css$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            "css-loader",
+          ],
+        },
+        {
+          test: /\.(woff|woff2|eot|ttf|otf)$/i,
+          type: "asset/resource",
+        },
+      ],
+    },
+  };
+}
 
 /**
  * Provides the ability to run `webpack` function by passing the webpack configuration
@@ -21,7 +82,7 @@ export function run(
   indexFileName = "index.html"
 ) {
   const finalWpConfig = {
-    ...DEFAULT_WEBPACK_CONFIG,
+    ...getDefaultWebpackConfig(),
     ...webpackConfigurationOverrides,
   };
   finalWpConfig.plugins.push(new WebpackFontPreloadPlugin(pluginOptions));
