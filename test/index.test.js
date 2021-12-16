@@ -70,6 +70,17 @@ describe("WebpackFontPreloadPlugin tests", () => {
     expect(font2.parentElement.tagName).toBe("BODY");
   });
 
+  it("should prepent in `head` if `insertBefore` is null", async () => {
+    const extensions = ["ttf"];
+    const { document } = await run(null, {
+      extensions,
+      insertBefore: null,
+    });
+    const [font1, font2] = findPreloadedFonts(document);
+    expect(font1.parentElement.tagName).toBe("HEAD");
+    expect(font2.parentElement.tagName).toBe("HEAD");
+  });
+
   it("should allow to update the generated index.html by using a template placeholder", async () => {
     const extensions = ["ttf"];
     const { document } = await run(null, {
