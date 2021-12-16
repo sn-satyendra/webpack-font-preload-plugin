@@ -64,23 +64,52 @@ describe("WebpackFontPreloadPlugin tests", () => {
       insertBefore: "#root",
     });
     const [font1, font2] = findPreloadedFonts(document);
+    // `#root` is first child in the `body`. So parent of `link` will
+    // be `body`.
     expect(font1.parentElement.tagName).toBe("BODY");
     expect(font2.parentElement.tagName).toBe("BODY");
   });
 
   it("should allow to update the generated index.html by using a template placeholder", async () => {
-    console.log("TODO");
+    const extensions = ["ttf"];
+    const { document } = await run(null, {
+      extensions,
+      replaceCallback: ({ indexSource, linksAsString }) => {
+        return indexSource.replace("{{{linksTplPlaceholder}}}", linksAsString);
+      },
+    });
+    const [font1, font2] = findPreloadedFonts(document);
+    // `#root` is the parent of templating placeholder.
+    expect(font1.parentElement.id).toBe("root");
+    expect(font2.parentElement.id).toBe("root");
   });
 
   it("should allow to filter font's for preload by specifying a contained string", async () => {
-    console.log("TODO");
+    const { document } = await run(null, {
+      filter: "app-font",
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(3);
   });
 
   it("should allow to filter font's for preload by specifying a regex", async () => {
-    console.log("TODO");
+    const { document } = await run(null, {
+      filter: /^app-font-1|^ext/i,
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(2);
   });
 
   it("should preload the fonts when public path is not provided", async () => {
-    console.log("TODO");
+    const { document } = await run({
+      output: {
+        path: WP_OUTPUT_DIR,
+        filename: "[name].[chunkhash].bundle.js",
+        chunkFilename: "[name].[chunkhash].chunk.js",
+        assetModuleFilename: "[name].[hash][ext]",
+      },
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(4);
   });
 });
