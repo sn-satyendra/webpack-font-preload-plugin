@@ -36,7 +36,9 @@ export function run(
       const assetNames = assets && (Object.keys(assets) || []);
       try {
         const htmlContent = fs
-          .readFileSync(path.join(WP_OUTPUT_DIR, indexFileName))
+          .readFileSync(
+            path.join(finalWpConfig.output.path || WP_OUTPUT_DIR, indexFileName)
+          )
           .toString();
         const parsed = new JSDOM(htmlContent);
         const { document } = parsed && parsed.window;
