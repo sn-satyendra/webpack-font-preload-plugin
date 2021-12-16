@@ -1,21 +1,21 @@
 @font-face {
   font-family: app-font-1;
-  src: url(./app-font-1.woff2);
+  src: url(./fonts/app-font-1.woff2);
 }
 
 @font-face {
   font-family: app-font-2;
-  src: url(./app-font-2.woff2);
+  src: url(./fonts/app-font-2.woff2);
 }
 
 @font-face {
   font-family: app-font-3;
-  src: url(./app-font-3.ttf);
+  src: url(./fonts/app-font-3.ttf);
 }
 
 @font-face {
   font-family: external-font;
-  src: url(./external-font.ttf);
+  src: url(./fonts/external-font.ttf);
 }
 
 div {
