@@ -105,7 +105,7 @@ export function run(
         const { document } = parsed && parsed.window;
         resolve({
           index: htmlContent,
-          indexDocument: document,
+          document,
           assets: assetNames,
         });
       } catch (fileReadError) {
@@ -119,11 +119,20 @@ export function run(
  * Get all the link tags for font preloads/prefetch from the provided
  * document.
  * @param {object} document JSDOM document object.
- * @returns {string[]} Array of font names generated in document.
+ * @returns {Element[]} Array of font link tags generated in document.
  */
 export function findPreloadedFonts(document) {
   const links = document.querySelectorAll("link[as='font']");
-  return Array.from(links).map((link) =>
+  return Array.from(links);
+}
+
+/**
+ * Get all the font names from the link tags for fonts preloaded in document.
+ * @param {object} document JSDOM document object.
+ * @returns {string[]} Array of font names generated in document.
+ */
+export function findPreloadedFontNames(document) {
+  return findPreloadedFonts(document).map((link) =>
     link.getAttribute("href").split("/").pop()
   );
 }

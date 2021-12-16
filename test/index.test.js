@@ -1,5 +1,5 @@
 import rimraf from "rimraf";
-import { run, findPreloadedFonts, areValidFonts } from "./utils/TestUtil";
+import { run, findPreloadedFontNames, areValidFonts } from "./utils/TestUtil";
 import { WP_OUTPUT_DIR } from "./constants/Constants";
 
 const cleanOutput = (done) => {
@@ -12,18 +12,18 @@ describe("WebpackFontPreloadPlugin tests", () => {
 
   it("should preload all the available fonts when no configuration is specified", async () => {
     const extensions = ["woff", "woff2", "ttf", "eot"];
-    const { indexDocument } = await run();
-    const fonts = findPreloadedFonts(indexDocument);
+    const { document } = await run();
+    const fonts = findPreloadedFontNames(document);
     expect(fonts.length).toBe(4);
     expect(await areValidFonts(fonts, extensions)).toBe(true);
   });
 
   it("should preload only specific fonts when `extensions` is specified", async () => {
     const extensions = ["ttf"];
-    const { indexDocument } = await run(null, {
+    const { document } = await run(null, {
       extensions,
     });
-    const fonts = findPreloadedFonts(indexDocument);
+    const fonts = findPreloadedFontNames(document);
     expect(fonts.length).toBe(2);
     expect(await areValidFonts(fonts, extensions)).toBe(true);
   });
