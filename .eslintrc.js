@@ -32,6 +32,7 @@ module.exports = {
         "no-console": OFF,
         "global-require": OFF,
         "import/prefer-default-export": OFF,
+        "prefer-promise-reject-errors": OFF,
       },
     },
   ],
