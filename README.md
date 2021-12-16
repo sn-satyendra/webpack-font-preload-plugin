@@ -57,7 +57,7 @@ new FontPreloadPlugin({
 ### `extensions`
 
 Type: `string[]`
-Default: `['woff', 'ttf', 'eot']`
+Default: `['woff', 'woff2', 'ttf', 'eot']`
 Optional: `true`
 
 Default font extensions which should be used.
@@ -150,14 +150,15 @@ Expression for allowing more granular filtering of the font assets for doing a p
 ```js
 // To only preload font's which have string `app-font` as part of there name.
 new FontPreloadPlugin({
-  filter: "app-font"
+  filter: "app-font",
 });
 
 // To preload fonts which start with `mui` or `app` in there name.
 new FontPreloadPlugin({
-  filter: /^mui|^app/i
+  filter: /^mui|^app/i,
 });
 ```
+
 ## License
 
 [MIT](./LICENSE)

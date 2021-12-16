@@ -1,0 +1,35 @@
+@font-face {
+  font-family: app-font-1;
+  src: url(./fonts/app-font-1.woff2);
+}
+
+@font-face {
+  font-family: app-font-2;
+  src: url(./fonts/app-font-2.woff2);
+}
+
+@font-face {
+  font-family: app-font-3;
+  src: url(./fonts/app-font-3.ttf);
+}
+
+@font-face {
+  font-family: external-font;
+  src: url(./fonts/external-font.ttf);
+}
+
+div {
+  font-family: app-font-1;
+}
+
+p {
+  font-family: app-font-2;
+}
+
+span {
+  font-family: app-font-3;
+}
+
+h1 {
+  font-family: external-font;
+}
