@@ -1,5 +1,10 @@
 import rimraf from "rimraf";
-import { run, findPreloadedFontNames, areValidFonts } from "./utils/TestUtil";
+import {
+  run,
+  findPreloadedFontNames,
+  areValidFonts,
+  findPreloadedFonts,
+} from "./utils/TestUtil";
 import { WP_OUTPUT_DIR } from "./constants/Constants";
 
 const cleanOutput = (done) => {
@@ -29,15 +34,38 @@ describe("WebpackFontPreloadPlugin tests", () => {
   });
 
   it("should not add `crossorigin` attribute when option is turned off", async () => {
-    console.log("TODO");
+    const extensions = ["ttf"];
+    const { document } = await run(null, {
+      extensions,
+      crossorigin: false,
+    });
+    const fonts = findPreloadedFonts(document);
+    expect(fonts.length).toBe(2);
+    expect(fonts[0].getAttribute("crossorigin")).toBe(null);
+    expect(fonts[1].getAttribute("crossorigin")).toBe(null);
   });
 
   it("should add link with `prefetch` when `loadType` is set as `prefetch`", async () => {
-    console.log("TODO");
+    const extensions = ["ttf"];
+    const { document } = await run(null, {
+      extensions,
+      loadType: "prefetch",
+    });
+    const fonts = findPreloadedFonts(document);
+    expect(fonts.length).toBe(2);
+    expect(fonts[0].getAttribute("rel")).toBe("prefetch");
+    expect(fonts[1].getAttribute("rel")).toBe("prefetch");
   });
 
   it("should allow to add `links` at arbitrary location in dom", async () => {
-    console.log("TODO");
+    const extensions = ["ttf"];
+    const { document } = await run(null, {
+      extensions,
+      insertBefore: "#root",
+    });
+    const [font1, font2] = findPreloadedFonts(document);
+    expect(font1.parentElement.tagName).toBe("BODY");
+    expect(font2.parentElement.tagName).toBe("BODY");
   });
 
   it("should allow to update the generated index.html by using a template placeholder", async () => {
