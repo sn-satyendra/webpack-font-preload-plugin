@@ -105,3 +105,6 @@ dist
 
 # Test dist
 test/dist
+
+# Default registry
+.npmrc
