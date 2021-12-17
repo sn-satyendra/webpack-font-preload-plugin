@@ -8,7 +8,8 @@
     "src/"
   ],
   "scripts": {
-    "lint": "eslint ./src --fix",
+    "lint": "eslint \"{src,test}/**/*.js\"",
+    "lint:fix": "eslint \"{src,test}/**/*.js\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "pretty-src": "prettier --write \"src/**/*.{js,ts,json,md}\"",
