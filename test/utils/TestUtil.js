@@ -4,7 +4,7 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { JSDOM } from "jsdom";
-import WebpackFontPreloadPlugin from "../../src/index";
+import WebpackFontPreloadPlugin from "../../src/cjs";
 import { WP_OUTPUT_DIR } from "../constants/Constants";
 
 /**
