@@ -43,7 +43,7 @@
     "jsdom": "^19.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.2",
+    "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@types/jsdom": "^16.2.14",
     "@types/webpack-sources": "^3.2.0",
