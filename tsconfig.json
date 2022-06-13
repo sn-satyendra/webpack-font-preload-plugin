@@ -1,16 +1,15 @@
 {
-  "include": ["src/**/*"],
   "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": false,
-    "allowJs": true,
-    "declaration": true,
-    "outDir": "dist",
-    "declarationMap": true,
+    "outDir": "./lib",
     "esModuleInterop": true,
-    "lib": ["esnext"],
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "emitDeclarationOnly": true
-  }
+    "declaration": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "target": "es5"
+  },
+  "files": [
+    "src/index.ts"
+  ]
 }
