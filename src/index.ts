@@ -4,11 +4,9 @@ import path from "path";
 import { Compiler, Compilation } from "webpack";
 import { Callback, LoadType, PluginOptions } from "./Types";
 
-interface WebpackFontPreloadPlugin {
-  options: PluginOptions;
-}
+export default class WebpackFontPreloadPlugin {
+  private options: PluginOptions;
 
-class WebpackFontPreloadPlugin {
   constructor(options: PluginOptions | undefined) {
     const defaults = {
       index: "index.html",
@@ -26,7 +24,7 @@ class WebpackFontPreloadPlugin {
    * This method is called once by the webpack compiler while installing the plugin.
    * @param {Compiler} compiler
    */
-  apply(compiler: Compiler) {
+  apply(compiler: Compiler): void {
     compiler.hooks.afterEmit.tapAsync(
       this.constructor.name,
       (compilation, callback) => this.addFonts(compilation, callback)
@@ -41,7 +39,7 @@ class WebpackFontPreloadPlugin {
    * @param {Callback} callback Callback to be invoked after processing
    *
    */
-  addFonts(compilation: Compilation, callback: Callback) {
+  private addFonts(compilation: Compilation, callback: Callback): void {
     try {
       if (this.options.index) {
         const { outputOptions } = compilation;
@@ -94,7 +92,7 @@ class WebpackFontPreloadPlugin {
    * @returns {string} Modified html as string
    *
    */
-  appendLinks(html: string, links: string): string {
+  private appendLinks(html: string, links: string): string {
     const parsed = new JSDOM(html);
     const { document } = parsed?.window;
     const head = document?.getElementsByTagName("head")[0];
@@ -126,7 +124,7 @@ class WebpackFontPreloadPlugin {
    * @returns {string|null} Extension of asset
    *
    */
-  getExtension(name: string): string | null {
+  private getExtension(name: string): string | null {
     const re = /(?:\.([^.]+))?$/;
     const results = re.exec(name);
     return results && results[1];
@@ -141,7 +139,7 @@ class WebpackFontPreloadPlugin {
    * @returns {string} String representaion of link
    *
    */
-  getLinkTag(name: string, publicPath: string): string {
+  private getLinkTag(name: string, publicPath: string): string {
     const { crossorigin, loadType } = this.options;
     return `<link
       rel="${loadType}"
@@ -157,7 +155,7 @@ class WebpackFontPreloadPlugin {
    * @param {string} name Name of the asset
    * @returns {boolean} Returns true if font asset
    */
-  isFontAsset(name: string): boolean {
+  private isFontAsset(name: string): boolean {
     const { extensions } = this.options;
     const extension = this.getExtension(name);
     if (extension && extensions) {
@@ -171,7 +169,7 @@ class WebpackFontPreloadPlugin {
    * @param {string} name Name of the asset
    * @returns {boolean} true if the asset is allowed to be preloaded
    */
-  isFiltered(name: string): boolean {
+  private isFiltered(name: string): boolean {
     const { filter } = this.options;
     if (filter) {
       if (filter instanceof RegExp) {
@@ -191,11 +189,11 @@ class WebpackFontPreloadPlugin {
    * @param {string} strHtml String representing the html
    * @returns {Array} Array of html nodes
    */
-  createNodeFromHtml(document: Document, strHtml: string): any {
+  private createNodeFromHtml(document: Document, strHtml: string): any {
     const container = document.createElement("div");
     container.innerHTML = strHtml.trim();
     return container.childNodes;
   }
 }
 
-export default WebpackFontPreloadPlugin;
+module.exports = WebpackFontPreloadPlugin;
