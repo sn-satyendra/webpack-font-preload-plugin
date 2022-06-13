@@ -96,10 +96,11 @@ class WebpackFontPreloadPlugin {
    */
   appendLinks(html: string, links: string): string {
     const parsed = new JSDOM(html);
-    const { document } = parsed && parsed.window;
-    const head = document && document.getElementsByTagName("head")[0];
-    const insertBeforeTag =
-      document && document.querySelector(this.options.insertBefore as string);
+    const { document } = parsed?.window;
+    const head = document?.getElementsByTagName("head")[0];
+    const insertBeforeTag = document?.querySelector(
+      this.options.insertBefore as string
+    );
     if (head) {
       if (!insertBeforeTag) {
         // The `insertBeforeTag` is not present. Prepend to head itself.
@@ -107,7 +108,7 @@ class WebpackFontPreloadPlugin {
       } else {
         const parent = insertBeforeTag.parentNode;
         const newNodes = Array.from(this.createNodeFromHtml(document, links));
-        if (newNodes && newNodes.length > 0 && parent) {
+        if (newNodes?.length > 0 && parent) {
           newNodes.forEach((n) => {
             parent.insertBefore(n as Node, insertBeforeTag);
           });
