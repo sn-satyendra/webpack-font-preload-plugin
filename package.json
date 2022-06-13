@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "tsc",
-    "prepublish": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run build",
     "lint": "eslint \"{src,test}/**/*.js\"",
     "lint:fix": "eslint \"{src,test}/**/*.js\" --fix",
     "test": "jest --config ./jest.config.ts",
