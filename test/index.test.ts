@@ -5,7 +5,7 @@ import {
   areValidFonts,
   findPreloadedFonts,
 } from "./utils/TestUtil";
-import { LoadType } from "../src/index";
+import { LoadType } from "../src/Types";
 import { WP_OUTPUT_DIR } from "./constants/Constants";
 
 const cleanOutput = (done: () => any) => {

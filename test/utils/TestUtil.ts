@@ -4,16 +4,10 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { JSDOM } from "jsdom";
-import WebpackFontPreloadPlugin, {
-  Options as WebpackFontPreloadPluginOptions,
-} from "../../src/index";
+import WebpackFontPreloadPlugin from "../../src/index";
+import { PluginOptions } from "../../src/Types";
 import { WP_OUTPUT_DIR } from "../constants/Constants";
-
-type RunOutput = {
-  index: string;
-  document: Document;
-  assets?: string[];
-};
+import { RunOutput } from "../constants/Types";
 
 /**
  * Get the default webpack config.
@@ -86,7 +80,7 @@ export function getDefaultWebpackConfig(): webpack.Configuration {
  */
 export function run(
   webpackConfigurationOverrides?: webpack.Configuration | null,
-  pluginOptions?: WebpackFontPreloadPluginOptions,
+  pluginOptions?: PluginOptions,
   indexFileName: string = "index.html"
 ): Promise<RunOutput> {
   const finalWpConfig = {
