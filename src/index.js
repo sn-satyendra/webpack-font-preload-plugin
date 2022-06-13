@@ -5,8 +5,9 @@
 /** @typedef {import('webpack').Compilation} WebpackCompilation */
 /** @typedef {import('jsdom').DOMWindow} Document */
 
-const RawSource = require("webpack-sources/lib/RawSource");
 const JsDom = require("jsdom");
+const fs = require("fs");
+const path = require("path");
 
 class WebpackFontPreloadPlugin {
   /**
@@ -32,7 +33,7 @@ class WebpackFontPreloadPlugin {
    * @param {WebpackCompiler} compiler
    */
   apply(compiler) {
-    compiler.hooks.emit.tapAsync(
+    compiler.hooks.afterEmit.tapAsync(
       this.constructor.name,
       (compilation, callback) => this.addFonts(compilation, callback)
     );
@@ -49,31 +50,36 @@ class WebpackFontPreloadPlugin {
   addFonts(compilation, callback) {
     try {
       if (this.options.index) {
-        const { assets, outputOptions } = compilation;
-        const assetNames = assets && (Object.keys(assets) || []);
-        const index = assets[this.options.index];
-        const indexSource = index && index.source();
+        const { outputOptions } = compilation;
+        const stats = compilation.getStats().toJson();
+        const { outputPath, assets = [] } = stats;
+        const index =
+          assets && assets.find((asset) => asset.name === this.options.index);
+        const indexSource =
+          index &&
+          outputPath &&
+          fs.readFileSync(path.join(outputPath, index.name)).toString();
         const publicPath = (outputOptions && outputOptions.publicPath) || "";
         if (indexSource) {
           let strLink = "";
-          assetNames.forEach((asset) => {
-            if (this.isFontAsset(asset) && this.isFiltered(asset)) {
-              strLink += this.getLinkTag(asset, publicPath.toString());
+          assets.forEach((asset) => {
+            if (this.isFontAsset(asset.name) && this.isFiltered(asset.name)) {
+              strLink += this.getLinkTag(asset.name, publicPath.toString());
             }
           });
           // If `replaceCallback` is specified then app is responsible to forming the updated
           // index.html by using the generated link string.
           if (this.options.replaceCallback) {
-            // @ts-ignore
-            assets[this.options.index] = new RawSource(
+            fs.writeFileSync(
+              path.join(outputPath, index.name),
               this.options.replaceCallback({
                 indexSource: indexSource.toString(),
                 linksAsString: strLink,
               })
             );
           } else {
-            // @ts-ignore
-            assets[this.options.index] = new RawSource(
+            fs.writeFileSync(
+              path.join(outputPath, index.name),
               this.appendLinks(indexSource.toString(), strLink)
             );
           }
