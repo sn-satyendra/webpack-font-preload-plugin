@@ -1,6 +1,6 @@
 {
   "name": "webpack-font-preload-plugin",
-  "version": "2.0.0",
+  "version": "2.0.0-alpha.0",
   "description": "A webpack plugin to allow preloading or prefetching of fonts.",
   "main": "src/cjs.js",
   "types": "src/index.d.ts",
@@ -18,7 +18,7 @@
     "pretty": "npm run pretty-src && npm run pretty-test && npm run pretty-configs"
   },
   "engines": {
-    "node": ">= 10.17.0"
+    "node": ">= 14.16.0"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "prefetch"
   ],
   "peerDependencies": {
-    "webpack": "^4.0.0 || ^5.0.0"
+    "webpack": "^5.0.0"
   },
   "author": "Satyendra Singh Naruka",
   "license": "MIT",
@@ -40,8 +40,7 @@
   },
   "homepage": "https://github.com/sn-satyendra/webpack-font-preload-plugin#readme",
   "dependencies": {
-    "jsdom": "^19.0.0",
-    "webpack-sources": "^3.2.3"
+    "jsdom": "^19.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
