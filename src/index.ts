@@ -1,10 +1,3 @@
-// @ts-check
-// Import types
-/** @typedef {import("./index.d").Options} WebpackFontPreloadPluginOptions */
-/** @typedef {import('webpack').Compiler} WebpackCompiler */
-/** @typedef {import('webpack').Compilation} WebpackCompilation */
-/** @typedef {import('jsdom').DOMWindow} Document */
-
 import { JSDOM } from "jsdom";
 import fs from "fs";
 import path from "path";
@@ -24,12 +17,12 @@ interface replaceCallbackOptions {
   linksAsString: string;
 }
 
-enum LoadType {
+export enum LoadType {
   PRELOAD = "preload",
-  PREFETCH = "prefetch"
+  PREFETCH = "prefetch",
 }
 
-interface Options {
+export interface Options {
   /**
    * Name of the index file which needs modification.
    *
@@ -56,7 +49,7 @@ interface Options {
    *
    * Defaults to "preload".
    */
-  loadType?: LoadType
+  loadType?: LoadType;
 
   /**
    * String representing the selector of tag before which the <link>
@@ -98,14 +91,14 @@ interface Options {
 }
 
 interface WebpackFontPreloadPlugin {
-  options: Options
+  options: Options;
 }
 
 class WebpackFontPreloadPlugin {
   /**
    * @param {WebpackFontPreloadPluginOptions} options
    */
-  constructor(options: Options) {
+  constructor(options: Options | undefined) {
     const defaults = {
       index: "index.html",
       extensions: ["woff", "woff2", "ttf", "eot"],
@@ -293,4 +286,4 @@ class WebpackFontPreloadPlugin {
   }
 }
 
-module.exports = WebpackFontPreloadPlugin;
+export default WebpackFontPreloadPlugin;
