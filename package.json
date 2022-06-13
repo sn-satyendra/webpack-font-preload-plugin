@@ -82,6 +82,6 @@
   "lint-staged": {
     "src/**/*.{js,ts,json,md}": "npm run pretty-src",
     "test/**/*.{js,ts,json,md}": "npm run pretty-test",
-    "*.{js,json,md}": "npm run pretty-configs"
+    "*.{js,ts,json,md}": "npm run pretty-configs"
   }
 }
