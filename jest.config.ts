@@ -1,6 +1,6 @@
-import path from 'path'
-import type { Config } from '@jest/types'
-import { defaults } from 'jest-config'
+import path from "path";
+import type { Config } from "@jest/types";
+import { defaults } from "jest-config";
 
 const config: Config.InitialOptions = {
   testEnvironment: "node",
@@ -19,9 +19,9 @@ const config: Config.InitialOptions = {
   coverageReporters: ["cobertura", "html", "lcov"],
   bail: true,
   verbose: true,
-  rootDir: path.resolve(__dirname, './'),
-  moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx', 'js'],
-  preset: '<rootDir>/node_modules/ts-jest'
-}
+  rootDir: path.resolve(__dirname, "./"),
+  moduleFileExtensions: [...defaults.moduleFileExtensions, "ts", "tsx", "js"],
+  preset: "<rootDir>/node_modules/ts-jest",
+};
 
-export default config
+export default config;

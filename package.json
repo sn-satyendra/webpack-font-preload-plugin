@@ -17,7 +17,7 @@
     "test:watch": "jest --watch --config ./jest.config.ts",
     "pretty-src": "prettier --write \"src/**/*.{js,ts,json,md}\"",
     "pretty-test": "prettier --write \"test/**/*.{js,ts,json,md}\"",
-    "pretty-configs": "prettier --write \"*.{js,json,md}\"",
+    "pretty-configs": "prettier --write \"*.{js,ts,json,md}\"",
     "pretty": "npm run pretty-src && npm run pretty-test && npm run pretty-configs"
   },
   "engines": {
