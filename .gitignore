@@ -108,3 +108,6 @@ test/dist
 
 # Default registry
 .npmrc
+
+# library
+lib/

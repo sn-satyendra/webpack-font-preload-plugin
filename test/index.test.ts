@@ -5,9 +5,10 @@ import {
   areValidFonts,
   findPreloadedFonts,
 } from "./utils/TestUtil";
+import { LoadType } from "../src/Types";
 import { WP_OUTPUT_DIR } from "./constants/Constants";
 
-const cleanOutput = (done) => {
+const cleanOutput = (done: () => any) => {
   rimraf(WP_OUTPUT_DIR, done);
 };
 
@@ -49,7 +50,7 @@ describe("WebpackFontPreloadPlugin tests", () => {
     const extensions = ["ttf"];
     const { document } = await run(null, {
       extensions,
-      loadType: "prefetch",
+      loadType: LoadType.PREFETCH,
     });
     const fonts = findPreloadedFonts(document);
     expect(fonts.length).toBe(2);
@@ -66,19 +67,19 @@ describe("WebpackFontPreloadPlugin tests", () => {
     const [font1, font2] = findPreloadedFonts(document);
     // `#root` is first child in the `body`. So parent of `link` will
     // be `body`.
-    expect(font1.parentElement.tagName).toBe("BODY");
-    expect(font2.parentElement.tagName).toBe("BODY");
+    expect(font1?.parentElement?.tagName).toBe("BODY");
+    expect(font2?.parentElement?.tagName).toBe("BODY");
   });
 
-  it("should prepent in `head` if `insertBefore` is null", async () => {
+  it("should prepent in `head` if `insertBefore` is undefined", async () => {
     const extensions = ["ttf"];
     const { document } = await run(null, {
       extensions,
-      insertBefore: null,
+      insertBefore: undefined,
     });
     const [font1, font2] = findPreloadedFonts(document);
-    expect(font1.parentElement.tagName).toBe("HEAD");
-    expect(font2.parentElement.tagName).toBe("HEAD");
+    expect(font1?.parentElement?.tagName).toBe("HEAD");
+    expect(font2?.parentElement?.tagName).toBe("HEAD");
   });
 
   it("should allow to update the generated index.html by using a template placeholder", async () => {
@@ -91,8 +92,8 @@ describe("WebpackFontPreloadPlugin tests", () => {
     });
     const [font1, font2] = findPreloadedFonts(document);
     // `#root` is the parent of templating placeholder.
-    expect(font1.parentElement.id).toBe("root");
-    expect(font2.parentElement.id).toBe("root");
+    expect(font1?.parentElement?.id).toBe("root");
+    expect(font2?.parentElement?.id).toBe("root");
   });
 
   it("should allow to filter font's for preload by specifying a contained string", async () => {
@@ -122,5 +123,24 @@ describe("WebpackFontPreloadPlugin tests", () => {
     });
     const fonts = findPreloadedFontNames(document);
     expect(fonts.length).toBe(4);
+  });
+
+  it("should not preload when mode is not `production`", async () => {
+    const { document } = await run({
+      mode: "development",
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(0);
+  });
+
+  it("should not preload when `devServer` is used", async () => {
+    const { document } = await run({
+      // @ts-ignore
+      devServer: {
+        allowedHosts: ["host.com"],
+      },
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(0);
   });
 });

@@ -1,53 +1,58 @@
-// @ts-check
-// Import types
-/** @typedef {import("./index.d").Options} WebpackFontPreloadPluginOptions */
-/** @typedef {import('webpack').Compiler} WebpackCompiler */
-/** @typedef {import('webpack').Compilation} WebpackCompilation */
-/** @typedef {import('jsdom').DOMWindow} Document */
+import { JSDOM } from "jsdom";
+import fs from "fs";
+import path from "path";
+import { Compiler, Compilation } from "webpack";
+import { Callback, LoadType, PluginOptions } from "./Types";
 
-const JsDom = require("jsdom");
-const fs = require("fs");
-const path = require("path");
+export default class WebpackFontPreloadPlugin {
+  private options: PluginOptions;
 
-class WebpackFontPreloadPlugin {
-  /**
-   * @param {WebpackFontPreloadPluginOptions} options
-   */
-  constructor(options) {
+  constructor(options: PluginOptions | undefined) {
     const defaults = {
       index: "index.html",
       extensions: ["woff", "woff2", "ttf", "eot"],
       crossorigin: true,
-      /** @type {WebpackFontPreloadPluginOptions["loadType"]} */
-      loadType: "preload",
+      loadType: LoadType.PRELOAD,
       insertBefore: "head > title",
       replaceCallback: undefined,
       filter: undefined,
     };
-    /** @type {WebpackFontPreloadPluginOptions} */
     this.options = { ...defaults, ...options };
   }
 
   /**
    * This method is called once by the webpack compiler while installing the plugin.
-   * @param {WebpackCompiler} compiler
+   * @param {Compiler} compiler
    */
-  apply(compiler) {
-    compiler.hooks.afterEmit.tapAsync(
-      this.constructor.name,
-      (compilation, callback) => this.addFonts(compilation, callback)
-    );
+  apply(compiler: Compiler): void {
+    const isProduction = this.isProductionBuild(compiler);
+    if (isProduction) {
+      compiler.hooks.afterEmit.tapAsync(
+        this.constructor.name,
+        (compilation, callback) => this.addFonts(compilation, callback)
+      );
+    }
+  }
+
+  /**
+   * Function to check if the production build is being run or not.
+   * @param {Compiler} compiler
+   * @returns true if we are running a production build.
+   */
+  private isProductionBuild(compiler: Compiler): boolean {
+    const { mode, devServer } = compiler.options;
+    return mode === "production" && devServer === undefined;
   }
 
   /**
    * Process the generated assets to add new <link> tags in the
    * generated html.
    *
-   * @param {WebpackCompilation} compilation Compilation object from webpack hook
-   * @param {(err?: Error) => void} callback Callback to be invoked after processing
+   * @param {Compilation} compilation Compilation object from webpack hook
+   * @param {Callback} callback Callback to be invoked after processing
    *
    */
-  addFonts(compilation, callback) {
+  private addFonts(compilation: Compilation, callback: Callback): void {
     try {
       if (this.options.index) {
         const { outputOptions } = compilation;
@@ -100,13 +105,13 @@ class WebpackFontPreloadPlugin {
    * @returns {string} Modified html as string
    *
    */
-  appendLinks(html, links) {
-    const { JSDOM } = JsDom;
+  private appendLinks(html: string, links: string): string {
     const parsed = new JSDOM(html);
-    const { document } = parsed && parsed.window;
-    const head = document && document.getElementsByTagName("head")[0];
-    const insertBeforeTag =
-      document && document.querySelector(this.options.insertBefore);
+    const { document } = parsed?.window;
+    const head = document?.getElementsByTagName("head")[0];
+    const insertBeforeTag = document?.querySelector(
+      this.options.insertBefore as string
+    );
     if (head) {
       if (!insertBeforeTag) {
         // The `insertBeforeTag` is not present. Prepend to head itself.
@@ -114,9 +119,9 @@ class WebpackFontPreloadPlugin {
       } else {
         const parent = insertBeforeTag.parentNode;
         const newNodes = Array.from(this.createNodeFromHtml(document, links));
-        if (newNodes && newNodes.length > 0) {
+        if (newNodes?.length > 0 && parent) {
           newNodes.forEach((n) => {
-            parent.insertBefore(n, insertBeforeTag);
+            parent.insertBefore(n as Node, insertBeforeTag);
           });
         }
       }
@@ -132,7 +137,7 @@ class WebpackFontPreloadPlugin {
    * @returns {string|null} Extension of asset
    *
    */
-  getExtension(name) {
+  private getExtension(name: string): string | null {
     const re = /(?:\.([^.]+))?$/;
     const results = re.exec(name);
     return results && results[1];
@@ -147,7 +152,7 @@ class WebpackFontPreloadPlugin {
    * @returns {string} String representaion of link
    *
    */
-  getLinkTag(name, publicPath) {
+  private getLinkTag(name: string, publicPath: string): string {
     const { crossorigin, loadType } = this.options;
     return `<link
       rel="${loadType}"
@@ -163,7 +168,7 @@ class WebpackFontPreloadPlugin {
    * @param {string} name Name of the asset
    * @returns {boolean} Returns true if font asset
    */
-  isFontAsset(name) {
+  private isFontAsset(name: string): boolean {
     const { extensions } = this.options;
     const extension = this.getExtension(name);
     if (extension && extensions) {
@@ -177,7 +182,7 @@ class WebpackFontPreloadPlugin {
    * @param {string} name Name of the asset
    * @returns {boolean} true if the asset is allowed to be preloaded
    */
-  isFiltered(name) {
+  private isFiltered(name: string): boolean {
     const { filter } = this.options;
     if (filter) {
       if (filter instanceof RegExp) {
@@ -197,7 +202,7 @@ class WebpackFontPreloadPlugin {
    * @param {string} strHtml String representing the html
    * @returns {Array} Array of html nodes
    */
-  createNodeFromHtml(document, strHtml) {
+  private createNodeFromHtml(document: Document, strHtml: string): any {
     const container = document.createElement("div");
     container.innerHTML = strHtml.trim();
     return container.childNodes;

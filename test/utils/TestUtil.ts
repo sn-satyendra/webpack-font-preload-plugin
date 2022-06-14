@@ -4,14 +4,16 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { JSDOM } from "jsdom";
-import WebpackFontPreloadPlugin from "../../src/cjs";
+import WebpackFontPreloadPlugin from "../../src/index";
+import { PluginOptions } from "../../src/Types";
 import { WP_OUTPUT_DIR } from "../constants/Constants";
+import { RunOutput } from "../constants/Types";
 
 /**
  * Get the default webpack config.
  * @returns {object} Config object.
  */
-export function getDefaultWebpackConfig() {
+export function getDefaultWebpackConfig(): webpack.Configuration {
   return {
     mode: "production",
     entry: [path.resolve(__dirname, "../fixtures/index.js")],
@@ -77,28 +79,31 @@ export function getDefaultWebpackConfig() {
  *                    else rejects with an error.
  */
 export function run(
-  webpackConfigurationOverrides,
-  pluginOptions,
-  indexFileName = "index.html"
-) {
+  webpackConfigurationOverrides?: webpack.Configuration | null,
+  pluginOptions?: PluginOptions,
+  indexFileName: string = "index.html"
+): Promise<RunOutput> {
   const finalWpConfig = {
     ...getDefaultWebpackConfig(),
     ...webpackConfigurationOverrides,
   };
-  finalWpConfig.plugins.push(new WebpackFontPreloadPlugin(pluginOptions));
+  finalWpConfig?.plugins?.push(new WebpackFontPreloadPlugin(pluginOptions));
   return new Promise((resolve, reject) => {
     webpack(finalWpConfig, (err, stats) => {
-      if (err || stats.hasErrors()) {
+      if (err || stats?.hasErrors()) {
         reject(err || stats);
         return;
       }
 
-      const { assets } = stats.compilation;
+      const assets = stats?.compilation?.assets;
       const assetNames = assets && (Object.keys(assets) || []);
       try {
         const htmlContent = fs
           .readFileSync(
-            path.join(finalWpConfig.output.path || WP_OUTPUT_DIR, indexFileName)
+            path.join(
+              finalWpConfig?.output?.path || WP_OUTPUT_DIR,
+              indexFileName
+            )
           )
           .toString();
         const parsed = new JSDOM(htmlContent);
@@ -121,7 +126,7 @@ export function run(
  * @param {object} document JSDOM document object.
  * @returns {Element[]} Array of font link tags generated in document.
  */
-export function findPreloadedFonts(document) {
+export function findPreloadedFonts(document: Document): Element[] {
   const links = document.querySelectorAll("link[as='font']");
   return Array.from(links);
 }
@@ -131,10 +136,15 @@ export function findPreloadedFonts(document) {
  * @param {object} document JSDOM document object.
  * @returns {string[]} Array of font names generated in document.
  */
-export function findPreloadedFontNames(document) {
-  return findPreloadedFonts(document).map((link) =>
-    link.getAttribute("href").split("/").pop()
-  );
+export function findPreloadedFontNames(document: Document): string[] {
+  const names: string[] = [];
+  findPreloadedFonts(document).forEach((link) => {
+    const name = link.getAttribute("href")?.split("/").pop();
+    if (name) {
+      names.push(name);
+    }
+  });
+  return names;
 }
 
 /**
@@ -146,7 +156,10 @@ export function findPreloadedFontNames(document) {
  *                                   otherwise rejects with error messages for failed
  *                                   fonts.
  */
-export function areValidFonts(fonts, validExtensions) {
+export function areValidFonts(
+  fonts: string[],
+  validExtensions: string[]
+): Promise<true | string[]> {
   const expression = /(?:\.([^.]+))?$/;
   const errors = [];
   if (fonts.length === 0) {
