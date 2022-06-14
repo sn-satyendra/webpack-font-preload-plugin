@@ -25,10 +25,23 @@ export default class WebpackFontPreloadPlugin {
    * @param {Compiler} compiler
    */
   apply(compiler: Compiler): void {
-    compiler.hooks.afterEmit.tapAsync(
-      this.constructor.name,
-      (compilation, callback) => this.addFonts(compilation, callback)
-    );
+    const isProduction = this.isProductionBuild(compiler);
+    if (isProduction) {
+      compiler.hooks.afterEmit.tapAsync(
+        this.constructor.name,
+        (compilation, callback) => this.addFonts(compilation, callback)
+      );
+    }
+  }
+
+  /**
+   * Function to check if the production build is being run or not.
+   * @param {Compiler} compiler
+   * @returns true if we are running a production build.
+   */
+  private isProductionBuild(compiler: Compiler): boolean {
+    const { mode, devServer } = compiler.options;
+    return mode === "production" && devServer === undefined;
   }
 
   /**

@@ -124,4 +124,23 @@ describe("WebpackFontPreloadPlugin tests", () => {
     const fonts = findPreloadedFontNames(document);
     expect(fonts.length).toBe(4);
   });
+
+  it("should not preload when mode is not `production`", async () => {
+    const { document } = await run({
+      mode: "development",
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(0);
+  });
+
+  it("should not preload when `devServer` is used", async () => {
+    const { document } = await run({
+      // @ts-ignore
+      devServer: {
+        allowedHosts: ["host.com"],
+      },
+    });
+    const fonts = findPreloadedFontNames(document);
+    expect(fonts.length).toBe(0);
+  });
 });
