@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import fs from "fs";
 import path from "path";
 import { Compiler, Compilation } from "webpack";
-import { Callback, LoadType, PluginOptions } from "./Types";
+import { Callback, LinkData, LoadType, PluginOptions } from "./Types";
 
 export default class WebpackFontPreloadPlugin {
   private options: PluginOptions;
@@ -67,9 +67,17 @@ export default class WebpackFontPreloadPlugin {
         const publicPath = (outputOptions && outputOptions.publicPath) || "";
         if (indexSource) {
           let strLink = "";
+          const linksAsArray: string[] = [];
+          const linksAsStructuredData: LinkData[] = [];
           assets.forEach((asset) => {
             if (this.isFontAsset(asset.name) && this.isFiltered(asset.name)) {
               strLink += this.getLinkTag(asset.name, publicPath.toString());
+              linksAsArray.push(
+                this.getLinkTag(asset.name, publicPath.toString())
+              );
+              linksAsStructuredData.push(
+                this.getLinkData(asset.name, publicPath.toString())
+              );
             }
           });
           // If `replaceCallback` is specified then app is responsible to forming the updated
@@ -80,6 +88,8 @@ export default class WebpackFontPreloadPlugin {
               this.options.replaceCallback({
                 indexSource: indexSource.toString(),
                 linksAsString: strLink,
+                linksAsArray,
+                linksAsStructuredData,
               })
             );
           } else {
@@ -160,6 +170,20 @@ export default class WebpackFontPreloadPlugin {
       as="font"
       ${crossorigin ? "crossorigin" : ""}
     >`;
+  }
+
+  /**
+   * Get all the necesarry data for building of a `<link>` tag for provided name
+   * and public path.
+   *
+   * @param {string} name Name of the font asset
+   * @param {string} publicPath Public path from webpack configuration
+   * @returns {LinkData} Structured data of the link
+   *
+   */
+  private getLinkData(name: string, publicPath: string): LinkData {
+    const { crossorigin, loadType } = this.options;
+    return { crossorigin, loadType, href: `${publicPath}${name}` };
   }
 
   /**
