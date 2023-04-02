@@ -67,9 +67,13 @@ export default class WebpackFontPreloadPlugin {
         const publicPath = (outputOptions && outputOptions.publicPath) || "";
         if (indexSource) {
           let strLink = "";
+          const linksAsArray: string[] = [];
           assets.forEach((asset) => {
             if (this.isFontAsset(asset.name) && this.isFiltered(asset.name)) {
               strLink += this.getLinkTag(asset.name, publicPath.toString());
+              linksAsArray.push(
+                this.getLinkTag(asset.name, publicPath.toString())
+              );
             }
           });
           // If `replaceCallback` is specified then app is responsible to forming the updated
@@ -80,6 +84,7 @@ export default class WebpackFontPreloadPlugin {
               this.options.replaceCallback({
                 indexSource: indexSource.toString(),
                 linksAsString: strLink,
+                linksAsArray,
               })
             );
           } else {

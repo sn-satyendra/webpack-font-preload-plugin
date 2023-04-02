@@ -16,6 +16,11 @@ export interface ReplaceCallbackOptions {
    * `<link>` tags for preloading fonts as a string
    */
   linksAsString: string;
+
+  /**
+   * `<link>` tags for preloading fonts as an array of strings
+   */
+  linksAsArray: string[];
 }
 
 /**
@@ -81,6 +86,7 @@ export interface PluginOptions {
   replaceCallback?: ({
     indexSource,
     linksAsString,
+    linksAsArray,
   }: ReplaceCallbackOptions) => string;
 
   /**

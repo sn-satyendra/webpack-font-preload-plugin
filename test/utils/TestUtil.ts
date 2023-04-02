@@ -161,7 +161,7 @@ export function areValidFonts(
   validExtensions: string[]
 ): Promise<true | string[]> {
   const expression = /(?:\.([^.]+))?$/;
-  const errors = [];
+  const errors: string[] = [];
   if (fonts.length === 0) {
     return Promise.reject(["No font's are preloaded in the output."]);
   }
