@@ -21,6 +21,11 @@ export interface ReplaceCallbackOptions {
    * `<link>` tags for preloading fonts as an array of strings
    */
   linksAsArray: string[];
+
+  /**
+   * Link data for building a `<link>` tag
+   */
+  linksAsStructuredData: LinkData[];
 }
 
 /**
@@ -87,6 +92,7 @@ export interface PluginOptions {
     indexSource,
     linksAsString,
     linksAsArray,
+    linksAsStructuredData,
   }: ReplaceCallbackOptions) => string;
 
   /**
@@ -101,4 +107,28 @@ export interface PluginOptions {
    * Defaults to undefined.
    */
   filter?: string | RegExp;
+}
+
+/**
+ * Data to build <font> link.
+ */
+export interface LinkData {
+  /**
+   * Is the font request crossorigin or not.
+   *
+   * Defaults to true.
+   */
+  crossorigin: PluginOptions["crossorigin"];
+
+  /**
+   * Type of load. It can be either "preload" or "prefetch".
+   *
+   * Defaults to "preload".
+   */
+  loadType: PluginOptions["loadType"];
+
+  /**
+   * Final value of href attribute of the <link>.
+   */
+  href: string;
 }
